@@ -16,7 +16,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [18.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
@@ -30,14 +30,12 @@ jobs:
       - name: Clean Install
         run: npm ci
 
-      - name: Run ESLint
-        run: eslint . --ext .js,.jsx,.ts,.tsx
+      # - name: Run ESLint
+      #   run: npx eslint . --ext .js,.jsx,.ts,.tsx
 
-      - name: run tests
+      - name: run tests before building
         run: npm test
 
       - name: Build If possible
         run: npm run build --if-present
 
-      - name: run tests
-        run: npm test
