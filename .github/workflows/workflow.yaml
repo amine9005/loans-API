@@ -30,9 +30,9 @@ jobs:
       - name: Clean Install
         run: npm ci
 
-      # - name: Run ESLint
-      #   run: npx eslint . --ext .js,.jsx,.ts,.tsx
-
+      - name: Run ESLint
+        run: npm run lint 
+        
       - name: run tests before building
         run: npm test
 

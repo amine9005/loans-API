@@ -28,7 +28,7 @@ app.use("/api/v1/loan_manager/audits", auditsRouter);
 app.use("/api/v1/loan_manager/payments", paymentsRouter);
 app.use("/api/v1/loan_manager/settings", settingsRouter);
 
-app.use("*", (req, res, next) => {
+app.use("*", (req, res) => {
   res.status(404).json({
     error: "404 Route Not Found",
   });
