@@ -1,32 +1,18 @@
-import dotenv from "dotenv";
 import express, { Application } from "express";
 import cors from "cors";
 import corsOptions from "./config/corsOptions";
+import { config } from "./config/config";
 
 import indexRouter from "./routes/router";
-import usersRouter from "./routes/users";
-import customersRouter from "./routes/customers";
-import loansRouter from "./routes/loans";
-import invoicesRouter from "./routes/invoices";
-import auditsRouter from "./routes/audits";
-import paymentsRouter from "./routes/payments";
-import settingsRouter from "./routes/settings";
-
-dotenv.config();
+import usersRouter from "./routes/users.router";
 
 const app: Application = express();
 
 app.use(express.json());
 app.use(cors(corsOptions));
 
-app.use("/api/v1/loan_manager", indexRouter);
-app.use("/api/v1/loan_manager/users", usersRouter);
-app.use("/api/v1/loan_manager/customers", customersRouter);
-app.use("/api/v1/loan_manager/loans", loansRouter);
-app.use("/api/v1/loan_manager/invoices", invoicesRouter);
-app.use("/api/v1/loan_manager/audits", auditsRouter);
-app.use("/api/v1/loan_manager/payments", paymentsRouter);
-app.use("/api/v1/loan_manager/settings", settingsRouter);
+app.use(config.api.url, indexRouter);
+app.use(config.api.url + "/users", usersRouter);
 
 app.use("*", (req, res) => {
   res.status(404).json({
