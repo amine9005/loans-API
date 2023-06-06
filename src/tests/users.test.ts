@@ -2,12 +2,11 @@ import createServer from "../app";
 import supertest from "supertest";
 import { config } from "../config/config";
 import usersFixtures from "./fixtures/users.fixtures";
-import { createUserService } from "../services/users.service";
+// import { createUserService } from "../services/users.service";
 import {
   connectToMemoryDB,
   disconnectFromMemoryDB,
 } from "../config/connectToTestDB";
-import exp from "constants";
 const api = config.api.url + "/users";
 
 // jest.mock("../services/users.service", () => {
@@ -71,6 +70,14 @@ describe("Registration", () => {
 });
 
 describe("get user by email", () => {
+  test("should return 404 Unable to find user", async () => {
+    const email = "user_user";
+    const getUser = await supertest(app).get(api + `/byEmail/${email}`);
+    expect(getUser.status).toEqual(404);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body.email).toBeUndefined();
+    expect(getUser.body).toEqual(usersFixtures.errorObject);
+  });
   test("should return 200 with a user", async () => {
     const postUser = await supertest(app)
       .post(api + "/create")
@@ -79,5 +86,14 @@ describe("get user by email", () => {
     const email = "user_user";
     const getUser = await supertest(app).get(api + `/byEmail/${email}`);
     expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body.user.email).toEqual(email);
+    expect(getUser.body.user).toEqual(
+      expect.objectContaining(usersFixtures.userOutput)
+    );
   });
 });
+
+// describe("get user by id", () => {
+//   describe("should return 200 with a user");
+// });

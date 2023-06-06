@@ -10,16 +10,6 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const { dob } = req.body;
   const { password } = req.body;
 
-  const user = new userModel({
-    _id: new mongoose.Types.ObjectId(),
-    firstName,
-    middleName,
-    lastName,
-    email,
-    authentication: { password: password },
-    dob,
-  });
-
   return userModel
     .findOne({ email: email })
     .then((tmp) => {
@@ -27,11 +17,20 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         console.log("Email Already Exists");
         return res.status(409).json({ error: "Email Already Exists" });
       }
+      const user = new userModel({
+        _id: new mongoose.Types.ObjectId(),
+        firstName,
+        middleName,
+        lastName,
+        email,
+        authentication: { password: password },
+        dob,
+      });
       user
         .save()
         .then(() => {
           console.log("User created successfully");
-          return res.status(200).json({ user: user });
+          return res.status(200).json({ user });
         })
         .catch((err) => {
           console.error("Unable to create user: " + err.message);
@@ -45,18 +44,27 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const getUserById = (req: Request, res: Response, next: NextFunction) => {
-  res.status(501).json({});
+  const { id } = req.params;
+  return userModel
+    .findOne({ _id: id })
+    .then((user) => {
+      console.log("User Found was by id  successfully");
+      res.status(200).json({ user });
+    })
+    .catch((err) => {
+      console.error("Unable to find user: " + err.message);
+      res.status(404).json({ error: err.message });
+    });
 };
 
 const getUserByEmail = (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.params;
-  console.log("email: ", email);
   return userModel
-    .findOne({ email: email })
+    .findOne({ email })
     .then((user) => {
       if (user) {
         console.log("User Found successfully");
-        return res.status(200).json({ user: user });
+        return res.status(200).json({ user });
       }
       console.log("User Not Found ");
 
