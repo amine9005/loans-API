@@ -1,42 +1,51 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Node.js CI
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push]
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-        mongodb-version: ['4.4.14', '5.0.9']
+        work-dir: [server]
+        node-version: [16.x, 18.x]
 
     steps:
-      - uses: actions/checkout@v3
+    - name: Checkout repo
+      uses: actions/checkout@v2
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Create mongoDB Docker container for API testing
+      uses: DigiPie/mongo-action@v2.0.1
 
-      - name: Start MongoDB
-        uses: MongoCamp/mongodb-github-action@1.0.0
-        with:
-          mongodb-version: ${{ matrix.mongodb-version }}
+    - name: Clean Install npm packages
+      run: npm ci
 
-      - run: curl http://localhost:27017
+    - name: Run ESLint
+      run: npm run lint 
+
+      working-directory: ${{ matrix.work-dir }}
+    - name: Move src/config/prod.ts to src/config/dev.ts
+      run: mv src/config/prod.ts src/config/dev.ts
+      working-directory: ${{ matrix.work-dir }}
+    - name: Run `npm run compile` to compile Typescript into Javascript
+      run: npm run compile
+      working-directory: ${{ matrix.work-dir }}
+
+    - name: Run `npm test`
+      run: npm test
 
 
-      - name: Clean Install
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint 
+      working-directory: ${{ matrix.work-dir }}
+      env:
+        CI: true
+        MONGODB_URI: mongodb://localhost:27017/dev # Access mongoDB Docker container
         
-      - name: run tests before building
-        run: npm test
 
-      - name: Build If possible
-        run: npm run build --if-present
+
+
 
