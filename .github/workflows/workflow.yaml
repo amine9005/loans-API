@@ -5,35 +5,48 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ]
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)
+        required: false
 
 jobs:
-  build:
-
+  tests:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v3
-
-      - name: Start MongoDB
-        uses: MongoCamp/mongodb-github-action@1.0.0
+        if: github.event.inputs.git-ref == ''
         with:
-          mongodb-version: ${{ matrix.mongodb-version }}
-
-      - run: curl http://localhost:27017
-
-
-      - name: Clean Install
-        run: npm ci
-
-      - name: Run ESLint
-        run: npm run lint 
-        
-      - name: run tests before building
-        run: npm test
-
-      - name: Build If possible
-        run: npm run build --if-present
+          fetch-depth: 0 # always fetch everything to be sure for codecov
+      - uses: actions/checkout@v3
+        if: github.event.inputs.git-ref != ''
+        with:
+          ref: ${{ github.event.inputs.git-ref }}
+          fetch-depth: 5 # because this is an manual trigger, only fetch the latest 5
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Load MongoDB binary cache
+        id: cache-mongodb-binaries
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/mongodb-binaries
+          key: ${{ matrix.node-version }}
+      - name: Install node_modules
+        run: npm ci #yarn
+#       - name: TSCheck
+#         run: yarn --cwd packages/mongodb-memory-server-core run tscheck
+      - name: ESLint
+        run: npm run lint
+      - name: Tests
+        run: npm run test
+#         run: yarn --cwd packages/mongodb-memory-server-core run coverage --colors
+        env:
+          CI: true
 
