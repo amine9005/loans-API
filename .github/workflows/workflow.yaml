@@ -13,28 +13,19 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        mongodb-version: ['4.4.14', '5.0.9']
 
     steps:
       - uses: actions/checkout@v3
 
-      - name: Create mongo Docker container
-        id: build_mongo_docker
-
-        uses: DigiPie/mongo-action@v2.0.1
+      - name: Start MongoDB
+        uses: MongoCamp/mongodb-github-action@1.0.0
         with:
-          image-version: latest
-          port: 80
+          mongodb-version: ${{ matrix.mongodb-version }}
 
-      - name: Install mongosh command
-        run: |
-            sudo apt-get update
-            sudo apt-get install -y wget gnupg
-            wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
-            echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-            sudo apt-get update
-            sudo apt-get install -y mongodb-mongosh
-      - name: Test mongo connection
-        run: "sudo mongosh localhost:80"
+      - run: curl http://localhost:27017
 
 
       - name: Clean Install
