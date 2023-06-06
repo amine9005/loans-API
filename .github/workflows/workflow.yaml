@@ -9,8 +9,8 @@ jobs:
 
     strategy:
       matrix:
-        work-dir: [server]
-        node-version: [16.x, 18.x]
+#         work-dir: [server]
+        node-version: [18.x]
 
     steps:
     - name: Checkout repo
@@ -21,29 +21,19 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - name: Create mongoDB Docker container for API testing
       uses: DigiPie/mongo-action@v2.0.1
-
+      
     - name: Clean Install npm packages
       run: npm ci
-
+      
     - name: Run ESLint
       run: npm run lint 
-
-      working-directory: ${{ matrix.work-dir }}
-    - name: Move src/config/prod.ts to src/config/dev.ts
-      run: mv src/config/prod.ts src/config/dev.ts
-      working-directory: ${{ matrix.work-dir }}
-    - name: Run `npm run compile` to compile Typescript into Javascript
-      run: npm run compile
-      working-directory: ${{ matrix.work-dir }}
 
     - name: Run `npm test`
       run: npm test
 
-
-      working-directory: ${{ matrix.work-dir }}
       env:
         CI: true
-        MONGODB_URI: mongodb://localhost:27017/dev # Access mongoDB Docker container
+        MONGODB_URI: mongodb://localhost:27017 # Access mongoDB Docker container
         
 
 
