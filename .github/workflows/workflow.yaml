@@ -1,51 +1,50 @@
 name: Node.js CI
 
-on: [push]
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      git-ref:
+        description: Git Ref (Optional)
+        required: false
 
 jobs:
-  build:
-
+  tests:
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        work-dir: [server]
-        node-version: [16.x, 18.x]
-
+        node-version: [12.x, 14.x, 16.x, 18.x]
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Create mongoDB Docker container for API testing
-      uses: DigiPie/mongo-action@v2.0.1
-
-    - name: Clean Install npm packages
-      run: npm ci
-
-    - name: Run ESLint
-      run: npm run lint 
-
-      working-directory: ${{ matrix.work-dir }}
-    - name: Move src/config/prod.ts to src/config/dev.ts
-      run: mv src/config/prod.ts src/config/dev.ts
-      working-directory: ${{ matrix.work-dir }}
-    - name: Run `npm run compile` to compile Typescript into Javascript
-      run: npm run compile
-      working-directory: ${{ matrix.work-dir }}
-
-    - name: Run `npm test`
-      run: npm test
-
-
-      working-directory: ${{ matrix.work-dir }}
-      env:
-        CI: true
-        MONGODB_URI: mongodb://localhost:27017/dev # Access mongoDB Docker container
-        
-
-
-
-
+      - uses: actions/checkout@v3
+        if: github.event.inputs.git-ref == ''
+        with:
+          fetch-depth: 0 # always fetch everything to be sure for codecov
+      - uses: actions/checkout@v3
+        if: github.event.inputs.git-ref != ''
+        with:
+          ref: ${{ github.event.inputs.git-ref }}
+          fetch-depth: 5 # because this is an manual trigger, only fetch the latest 5
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Load MongoDB binary cache
+        id: cache-mongodb-binaries
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/mongodb-binaries
+          key: ${{ matrix.node-version }}
+      - name: Install node_modules
+        run: yarn
+      - name: TSCheck
+        run: yarn --cwd packages/mongodb-memory-server-core run tscheck
+      - name: ESLint
+        run: yarn run lint
+      - name: Tests
+        run: yarn --cwd packages/mongodb-memory-server-core run coverage --colors
+        env:
+          CI: true
+      - name: Send codecov.io stats
+        if: matrix.node-version == '12.x'
+        uses: codecov/codecov-action@v3
