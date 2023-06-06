@@ -32,3 +32,7 @@ const UserSchema = new Schema(
 );
 
 export default mongoose.model<IUserModel>("User", UserSchema);
+
+export interface IUserDoc extends IUser {
+  _id: mongoose.Types.ObjectId;
+}

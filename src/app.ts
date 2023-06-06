@@ -6,18 +6,22 @@ import { config } from "./config/config";
 import indexRouter from "./routes/router";
 import usersRouter from "./routes/users.router";
 
-const app: Application = express();
+function createServer() {
+  const app: Application = express();
 
-app.use(express.json());
-app.use(cors(corsOptions));
+  app.use(express.json());
+  app.use(cors(corsOptions));
 
-app.use(config.api.url, indexRouter);
-app.use(config.api.url + "/users", usersRouter);
+  app.use(config.api.url, indexRouter);
+  app.use(config.api.url + "/users", usersRouter);
 
-app.use("*", (req, res) => {
-  res.status(404).json({
-    error: "404 Route Not Found",
+  app.use("*", (req, res) => {
+    res.status(404).json({
+      error: "404 Route Not Found",
+    });
   });
-});
 
-export default app;
+  return app;
+}
+
+export default createServer;
