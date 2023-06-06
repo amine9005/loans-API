@@ -26,6 +26,8 @@ jobs:
         with:
           mongodb-version: ${{ matrix.mongodb-version }}
 
+      - run: curl http://localhost:27017
+
       - name: Clean Install
         run: npm ci
 
