@@ -8,7 +8,7 @@ const DATABASE_NAME = process.env.DATABASE_NAME || "testing";
 
 const MONGO_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.oowuzud.mongodb.net/${DATABASE_NAME}`;
 
-const API_URL = process.env.API_URL || "api/v0/";
+const API_URL = process.env.API_URL || "/api/v1/inventory_manager";
 
 const MEMORY_DATABASE =
   process.env.MEMORY_DATABASE ||
