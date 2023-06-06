@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v3
+
       - name: Create mongo Docker container
         id: build_mongo_docker
 
@@ -34,7 +36,6 @@ jobs:
       - name: Test mongo connection
         run: "sudo mongosh localhost:80"
 
-      - uses: actions/checkout@v3
 
       - name: Clean Install
         run: npm ci
