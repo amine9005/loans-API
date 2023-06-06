@@ -21,13 +21,18 @@ jobs:
         uses: DigiPie/mongo-action@v2.0.1
         with:
           image-version: latest
-          port: 80
+          port: 27017
 
-      # - name: Test mongo connection
-      #   id: test_mongo_connection
-      #   run: sudo mongo localhost:27017
-
-      
+      - name: Install mongosh command
+        run: |
+            sudo apt-get update
+            sudo apt-get install -y wget gnupg
+            wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | sudo apt-key add -
+            echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+            sudo apt-get update
+            sudo apt-get install -y mongodb-mongosh
+      - name: Test mongo connection
+        run: "sudo mongosh localhost:27017"
 
       - uses: actions/checkout@v3
 
