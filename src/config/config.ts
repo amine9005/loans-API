@@ -10,7 +10,9 @@ const MONGO_URI = `mongodb+srv://${MONGO_USERNAME}:${MONGO_PASSWORD}@cluster0.oo
 
 const API_URL = process.env.API_URL || "api/v0/";
 
-const MEMORY_DATABASE = process.env.MEMORY_DATABASE || "http://localhost:27017";
+const MEMORY_DATABASE =
+  process.env.MEMORY_DATABASE ||
+  "mongodb://localhost:27017?retryWrites=true&w=majority";
 
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
