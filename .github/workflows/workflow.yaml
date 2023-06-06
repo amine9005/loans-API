@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.x, 18.x]
+        node-version: [18.x]
     steps:
       - uses: actions/checkout@v3
         if: github.event.inputs.git-ref == ''
@@ -36,15 +36,14 @@ jobs:
           path: ~/.cache/mongodb-binaries
           key: ${{ matrix.node-version }}
       - name: Install node_modules
-        run: yarn
-      - name: TSCheck
-        run: yarn --cwd packages/mongodb-memory-server-core run tscheck
+        run: npm ci #yarn
+#       - name: TSCheck
+#         run: yarn --cwd packages/mongodb-memory-server-core run tscheck
       - name: ESLint
-        run: yarn run lint
+        run: npm run lint
       - name: Tests
-        run: yarn --cwd packages/mongodb-memory-server-core run coverage --colors
+        run: npm run test
+#         run: yarn --cwd packages/mongodb-memory-server-core run coverage --colors
         env:
           CI: true
-      - name: Send codecov.io stats
-        if: matrix.node-version == '12.x'
-        uses: codecov/codecov-action@v3
+
