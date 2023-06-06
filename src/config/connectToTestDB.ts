@@ -23,6 +23,8 @@ export const connectToMemoryDB = async () => {
 };
 
 export const disconnectFromMemoryDB = async () => {
-  await mongoose.disconnect();
-  await mongoose.connection.close();
+  await mongoose.connection.db.dropDatabase().then(() => {
+    mongoose.disconnect();
+    mongoose.connection.close();
+  });
 };
