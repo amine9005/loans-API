@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Create mongo Docker container
         id: build_mongo_docker
-        
+
         uses: yog27ray/mongo-inmemory-action@v1.1.0
         with:
           image-version: latest
@@ -25,7 +25,7 @@ jobs:
 
       - name: Test mongo connection
         id: test_mongo_connection
-        run: "sudo mongo localhost:27017"
+        run: sudo mongo localhost:27017
 
       - uses: actions/checkout@v3
 
