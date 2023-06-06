@@ -1,10 +1,19 @@
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
+import { config } from "./config";
 
 export const connectToMemoryDB = async () => {
-  const mongoServer = await MongoMemoryServer.create();
+  let url: string;
+  if (config.memory.url === "TRUE") {
+    const mongoServer = await MongoMemoryServer.create();
+
+    url = mongoServer.getUri();
+  } else {
+    url = config.memory.url;
+  }
+
   await mongoose
-    .connect("http://localhost:27017")
+    .connect(url)
     .then(() => {
       console.log("Connected to memory server");
     })
