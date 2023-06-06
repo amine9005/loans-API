@@ -21,7 +21,7 @@ jobs:
         uses: DigiPie/mongo-action@v2.0.1
         with:
           image-version: latest
-          port: 27017
+          port: 80
 
       - name: Install mongosh command
         run: |
@@ -32,7 +32,7 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y mongodb-mongosh
       - name: Test mongo connection
-        run: "sudo mongosh localhost:27017"
+        run: "sudo mongosh localhost:80"
 
       - uses: actions/checkout@v3
 
