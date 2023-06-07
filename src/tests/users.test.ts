@@ -6,6 +6,7 @@ import usersFixtures from "./fixtures/users.fixtures";
 import {
   connectToMemoryDB,
   disconnectFromMemoryDB,
+  __DANGER__dropDataBase,
 } from "../config/connectToTestDB";
 const api = config.api.url + "/users";
 
@@ -18,11 +19,15 @@ const api = config.api.url + "/users";
 // });
 
 const app = createServer();
-beforeEach(async () => {
+beforeAll(async () => {
   await connectToMemoryDB();
 });
 
 afterEach(async () => {
+  await __DANGER__dropDataBase();
+});
+
+afterAll(async () => {
   await disconnectFromMemoryDB();
 });
 
@@ -94,6 +99,54 @@ describe("get user by email", () => {
   });
 });
 
-// describe("get user by id", () => {
-//   describe("should return 200 with a user");
-// });
+describe("get user by id", () => {
+  test("should return 404 with an error", async () => {
+    const id = "647e370770db17b0e0071a96";
+    const response = await supertest(app).post(api + `/byId/${id}`);
+    expect(response.status).toEqual(404);
+    expect(response.type).toEqual("application/json");
+    expect(response.body).toEqual(usersFixtures.errorObject);
+  });
+
+  test("should return 200 with a user", async () => {
+    const postUser = await supertest(app)
+      .post(api + `/create`)
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const id = postUser.body.user._id;
+    const getUser = await supertest(app).get(api + `/byId/${id}`);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body.user).toEqual(
+      expect.objectContaining(usersFixtures.userOutput)
+    );
+  });
+});
+
+describe("get all users", () => {
+  test("should return 200 empty json", async () => {
+    const users = await supertest(app).get(api);
+    expect(users.status).toEqual(200);
+    expect(users.type).toEqual("application/json");
+    expect(users.body.users).toEqual([]);
+  });
+
+  test("should return 200 with 3 users", async () => {
+    const size = 3;
+    for (let i = 0; i < size; i++) {
+      const postUser = await supertest(app)
+        .post(api + "/create")
+        .send(usersFixtures.createRandomUser());
+      expect(postUser.status).toEqual(200);
+    }
+    const users = await supertest(app).get(api);
+    expect(users.status).toEqual(200);
+    expect(users.type).toEqual("application/json");
+    expect(users.body.users).toHaveLength(size);
+    for (let i = 0; i < size; i++) {
+      expect(users.body.users[i]).toEqual(
+        expect.objectContaining(usersFixtures.userOutput)
+      );
+    }
+  });
+});

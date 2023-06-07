@@ -23,9 +23,9 @@ const UserSchema = new Schema(
     email: { type: String, required: true },
     dob: { type: String, required: true },
     authentication: {
-      password: { type: String, required: true, selected: false },
-      salt: { type: String, selected: false },
-      sessionToken: { type: String, selected: false },
+      password: { type: String, required: true, select: false },
+      salt: { type: String, select: false },
+      sessionToken: { type: String, select: false },
     },
   },
   { versionKey: false }

@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import userModel from "../models/user.model";
+import { random, authentication } from "../helpers";
 
 const createUser = async (req: Request, res: Response, next: NextFunction) => {
   const { firstName } = req.body;
@@ -17,13 +18,14 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
         console.log("Email Already Exists");
         return res.status(409).json({ error: "Email Already Exists" });
       }
+      const salt = random();
       const user = new userModel({
         _id: new mongoose.Types.ObjectId(),
         firstName,
         middleName,
         lastName,
         email,
-        authentication: { password: password },
+        authentication: { salt, password: authentication(salt, password) },
         dob,
       });
       user
@@ -46,7 +48,7 @@ const createUser = async (req: Request, res: Response, next: NextFunction) => {
 const getUserById = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   return userModel
-    .findOne({ _id: id })
+    .findById(id)
     .then((user) => {
       console.log("User Found was by id  successfully");
       res.status(200).json({ user });
@@ -76,13 +78,32 @@ const getUserByEmail = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 const updateUser = (req: Request, res: Response, next: NextFunction) => {
+  //Update by id
   res.status(501).json({});
 };
 const deleteUser = (req: Request, res: Response, next: NextFunction) => {
+  //by id findOneAndDelete(_id:id)
   res.status(501).json({});
 };
-const getAllUsers = (req: Request, res: Response, next: NextFunction) => {
-  res.status(501).json({});
+export const getAllUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  return userModel
+    .find()
+    .then((users) => {
+      console.log("Users were found");
+      return res.status(200).json({ users });
+    })
+    .catch((err) => {
+      console.error("Unable to find users: " + err.message);
+      return res.status(500).json({ error: err.message });
+    });
+};
+
+export const getUserBySessionToken = (sessionToken: string) => {
+  return userModel.findOne({ "authentication.sessionToken": sessionToken });
 };
 
 export default {

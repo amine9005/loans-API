@@ -14,6 +14,8 @@ const MEMORY_DATABASE =
   process.env.MEMORY_DATABASE ||
   "mongodb://localhost:27017?retryWrites=true&w=majority";
 
+const UPDATE_SECRET = process.env.UPDATE_SECRET || "NEED AN UPDATE SECRET";
+
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
   : 8000;
@@ -30,5 +32,8 @@ export const config = {
   },
   memory: {
     url: MEMORY_DATABASE,
+  },
+  secret: {
+    update: UPDATE_SECRET,
   },
 };
