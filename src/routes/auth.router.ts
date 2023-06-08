@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/login", loginLimiter, authController.login);
 router.post("/register", authController.registerUser);
-router.get("/refresh");
-router.post("/logout");
+router.get("/refresh", authController.refresh);
+router.post("/logout", authController.logout);
 
 export default router;

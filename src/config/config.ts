@@ -15,6 +15,10 @@ const MEMORY_DATABASE =
   "mongodb://localhost:27017?retryWrites=true&w=majority";
 
 const UPDATE_SECRET = process.env.UPDATE_SECRET || "NEED AN UPDATE SECRET";
+const ACCESS_SECRET =
+  process.env.ACCESS_TOKEN_SECRET || "NEED AN ACCESS SECRET";
+const REFRESH_SECRET =
+  process.env.REFRESH_TOKEN_SECRET || "NEED AN REFRESH SECRET";
 
 const SERVER_PORT = process.env.SERVER_PORT
   ? Number(process.env.SERVER_PORT)
@@ -35,5 +39,7 @@ export const config = {
   },
   secret: {
     update: UPDATE_SECRET,
+    access: ACCESS_SECRET,
+    refresh: REFRESH_SECRET,
   },
 };

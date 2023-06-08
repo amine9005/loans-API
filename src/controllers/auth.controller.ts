@@ -1,7 +1,15 @@
 import { Request, Response, NextFunction } from "express";
 import mongoose from "mongoose";
 import userModel from "../models/user.model";
-import { random, authentication } from "../helpers";
+import {
+  random,
+  authentication,
+  createAccessToken,
+  createRefreshToken,
+  userToken,
+} from "../helpers";
+import jwt from "jsonwebtoken";
+import { config } from "../config/config";
 
 const registerUser = async (
   req: Request,
@@ -63,35 +71,37 @@ const login = async (req: Request, res: Response) => {
     .findOne({ email })
     .select("+authentication.salt +authentication.password")
     .then((user) => {
-      console.log("user object: " + user);
       const expectedHash = authentication(user.authentication.salt, password);
 
       if (expectedHash !== user.authentication.password) {
         return res.status(403).json({ error: "Wrong password" });
       }
 
-      const salt = random();
-      user.authentication.sessionToken = authentication(
-        salt,
-        user._id.toString()
-      );
+      // const salt = random();
+      // user.authentication.sessionToken = authentication(
+      //   salt,
+      //   user._id.toString()
+      // );
 
-      user
-        .save()
-        .then((user) => {
-          res.cookie("USER-AUTH", user.authentication.sessionToken, {
-            domain: "localhost",
-            path: "/",
-          });
-          console.log("Login successful");
-          return res.status(200).json(user);
-        })
-        .catch((err) => {
-          console.error("Unable To Save user Session");
-          return res
-            .status(500)
-            .json({ error: "Unable to Save Session " + err.message });
-        });
+      const userPayload = {
+        _id: user._id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        // "role":user.role
+      };
+      const accessToken = createAccessToken(userPayload, "5min");
+
+      const refreshToken = createRefreshToken(userPayload, "7d");
+
+      res.cookie("jwt", refreshToken, {
+        httpOnly: true,
+        // secure: true,
+        sameSite: "none",
+        path: "/",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
+      return res.status(200).json({ accessToken });
     })
     .catch((err) => {
       console.error("Error cant find user: " + err.message);
@@ -102,10 +112,49 @@ const login = async (req: Request, res: Response) => {
 };
 
 const refresh = (req: Request, res: Response) => {
-  return res.status(501);
+  const cookies = req.cookies;
+  if (!cookies?.jwt) {
+    return res.status(401).json({ error: "Please Login First!" });
+  }
+  const refreshToken = cookies.jwt;
+  try {
+    const current = jwt.verify(
+      refreshToken,
+      config.secret.refresh
+    ) as userToken;
+    return userModel
+      .findById(current["userinfo"]["user_id"])
+      .then((user) => {
+        const userPayload = {
+          _id: user._id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          // "role":user.role
+        };
+        const accessToken = createAccessToken(userPayload, "15min");
+        return res.status(200).json({ accessToken });
+      })
+      .catch((err) => {
+        return res
+          .status(401)
+          .json({ error: "Unauthorized User Was Not Found: " + err.message });
+      });
+  } catch (err) {
+    return res.status(401).json({ error: "Unauthorized: " + err.message });
+  }
 };
 
 const logout = (req: Request, res: Response) => {
-  return res.status(501);
+  const cookies = req.cookies;
+  if (!cookies?.jwt) {
+    return res.status(401).json({ error: "Cookie Does Not Exist!" });
+  }
+  res.cookie("jwt", "", {
+    maxAge: 0,
+    httpOnly: true,
+  });
+
+  return res.status(200).json({ message: "Logged out successfully" });
 };
+
 export default { login, registerUser, refresh, logout };
