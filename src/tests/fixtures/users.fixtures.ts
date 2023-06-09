@@ -2,8 +2,6 @@ const errorObject = expect.objectContaining({
   error: expect.any(String),
 });
 
-// import {IUserDoc} from '../../models/user.model'
-
 function makeId(length: number) {
   let result = "";
   const characters =
@@ -37,6 +35,11 @@ const userInput = {
   password: "12550",
 };
 
+const userLogin = {
+  email: "user_user",
+  password: "12550",
+};
+
 const invalidUserInput = {
   //   firstName: "Amine",
   middleName: "S",
@@ -53,10 +56,21 @@ const userOutput = {
   dob: expect.any(String),
 };
 
+const accessToken = {
+  accessToken: expect.any(String),
+};
+
+const statusMessage = {
+  message: expect.any(String),
+};
+
 export default {
   errorObject,
   createRandomUser,
   userInput,
   userOutput,
   invalidUserInput,
+  userLogin,
+  accessToken,
+  statusMessage,
 };
