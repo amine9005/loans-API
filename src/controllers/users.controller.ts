@@ -1,51 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import mongoose from "mongoose";
+import { Request, Response } from "express";
 import userModel from "../models/user.model";
-import { random, authentication } from "../helpers";
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
-  const { firstName } = req.body;
-  const { middleName } = req.body;
-  const { lastName } = req.body;
-  const { email } = req.body;
-  const { dob } = req.body;
-  const { password } = req.body;
-
-  return userModel
-    .findOne({ email: email })
-    .then((tmp) => {
-      if (tmp) {
-        console.log("Email Already Exists");
-        return res.status(409).json({ error: "Email Already Exists" });
-      }
-      const salt = random();
-      const user = new userModel({
-        _id: new mongoose.Types.ObjectId(),
-        firstName,
-        middleName,
-        lastName,
-        email,
-        authentication: { salt, password: authentication(salt, password) },
-        dob,
-      });
-      user
-        .save()
-        .then(() => {
-          console.log("User created successfully");
-          return res.status(200).json({ user });
-        })
-        .catch((err) => {
-          console.error("Unable to create user: " + err.message);
-          return res.status(406).json({ error: err.message });
-        });
-    })
-    .catch((err) => {
-      console.error("Unable to find user: " + err.message);
-      return res.status(500).json({ error: err.message });
-    });
-};
-
-const getUserById = (req: Request, res: Response, next: NextFunction) => {
+const getUserById = (req: Request, res: Response) => {
   const { id } = req.params;
   return userModel
     .findById(id)
@@ -59,7 +15,7 @@ const getUserById = (req: Request, res: Response, next: NextFunction) => {
     });
 };
 
-const getUserByEmail = (req: Request, res: Response, next: NextFunction) => {
+const getUserByEmail = (req: Request, res: Response) => {
   const { email } = req.params;
   return userModel
     .findOne({ email })
@@ -77,19 +33,15 @@ const getUserByEmail = (req: Request, res: Response, next: NextFunction) => {
       return res.status(500).json({ error: err.message });
     });
 };
-const updateUser = (req: Request, res: Response, next: NextFunction) => {
+const updateUser = (req: Request, res: Response) => {
   //Update by id
   res.status(501).json({});
 };
-const deleteUser = (req: Request, res: Response, next: NextFunction) => {
+const deleteUser = (req: Request, res: Response) => {
   //by id findOneAndDelete(_id:id)
   res.status(501).json({});
 };
-export const getAllUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const getAllUsers = async (req: Request, res: Response) => {
   return userModel
     .find()
     .then((users) => {
@@ -107,7 +59,6 @@ export const getUserBySessionToken = (sessionToken: string) => {
 };
 
 export default {
-  createUser,
   getUserById,
   getUserByEmail,
   updateUser,

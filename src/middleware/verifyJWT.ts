@@ -8,7 +8,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const { jwt } = req.cookies;
 
-  if (!authHeader?.startsWith("Bearer ") && !jwt) {
+  if (!authHeader?.startsWith("Bearer ") || !jwt) {
     console.log("Auth header is Required");
     return res
       .status(401)
@@ -16,10 +16,7 @@ const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   }
   const token = authHeader.split(" ")[1];
   try {
-    const currentUser = jwt_lib.verify(
-      token,
-      config.secret.access
-    ) as userToken;
+    jwt_lib.verify(token, config.secret.access) as userToken;
     // extend(req, { identity: currentUser["userinfo"] });
     next();
   } catch (err) {

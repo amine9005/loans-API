@@ -4,8 +4,8 @@ import corsOptions from "./config/corsOptions";
 import { config } from "./config/config";
 
 import indexRouter from "./routes/router";
-import usersRouter from "./routes/users.router";
 import authRouter from "./routes/auth.router";
+import usersRouter from "./routes/users.router";
 
 import cookieParser from "cookie-parser";
 

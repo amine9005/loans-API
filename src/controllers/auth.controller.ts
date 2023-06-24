@@ -11,6 +11,10 @@ import {
 import jwt from "jsonwebtoken";
 import { config } from "../config/config";
 
+const ACCESS_TOKEN_DURATION = "15min";
+const REFRESH_TOKEN_DURATION = "1d";
+const REFRESH_TOKEN_MAX_AGE_IN_DAYS = 1;
+
 const registerUser = async (
   req: Request,
   res: Response,
@@ -89,16 +93,19 @@ const login = async (req: Request, res: Response) => {
         lastName: user.lastName,
         // "role":user.role
       };
-      const accessToken = createAccessToken(userPayload, "5min");
+      const accessToken = createAccessToken(userPayload, ACCESS_TOKEN_DURATION);
 
-      const refreshToken = createRefreshToken(userPayload, "7d");
+      const refreshToken = createRefreshToken(
+        userPayload,
+        REFRESH_TOKEN_DURATION
+      );
 
       res.cookie("jwt", refreshToken, {
         httpOnly: true,
-        // secure: true,
+        secure: true,
         sameSite: "none",
         path: "/",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
+        maxAge: REFRESH_TOKEN_MAX_AGE_IN_DAYS * 24 * 60 * 60 * 1000,
       });
 
       return res.status(200).json({ accessToken });
@@ -113,6 +120,8 @@ const login = async (req: Request, res: Response) => {
 
 const refresh = (req: Request, res: Response) => {
   const cookies = req.cookies;
+  // console.log("refresh request: " + JSON.stringify(req.cookies));
+
   if (!cookies?.jwt) {
     return res.status(401).json({ error: "Please Login First!" });
   }
@@ -131,7 +140,10 @@ const refresh = (req: Request, res: Response) => {
           lastName: user.lastName,
           // "role":user.role
         };
-        const accessToken = createAccessToken(userPayload, "15min");
+        const accessToken = createAccessToken(
+          userPayload,
+          ACCESS_TOKEN_DURATION
+        );
         return res.status(200).json({ accessToken });
       })
       .catch((err) => {
@@ -146,6 +158,8 @@ const refresh = (req: Request, res: Response) => {
 
 const logout = (req: Request, res: Response) => {
   const cookies = req.cookies;
+  console.log("request: " + JSON.stringify(req.cookies));
+
   if (!cookies?.jwt) {
     return res.status(401).json({ error: "Cookie Does Not Exist!" });
   }
