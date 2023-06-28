@@ -47,14 +47,15 @@ describe("Get User by id", () => {
       expect.objectContaining(usersFixtures.accessToken)
     );
     const { header } = getUser;
-    const getAllUsers = await supertest(app)
-      .get(api)
+    const getUserById = await supertest(app)
+      .get(api + "/" + postUser.body.user._id)
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+    console.log("help: " + JSON.stringify(postUser.body));
 
-    expect(getAllUsers.status).toEqual(200);
-    expect(getAllUsers.type).toEqual("application/json");
-    expect(getAllUsers.body.users[0]).toEqual(
+    expect(getUserById.status).toEqual(200);
+    expect(getUserById.type).toEqual("application/json");
+    expect(getUserById.body.user).toEqual(
       expect.objectContaining(usersFixtures.userOutput)
     );
   });
