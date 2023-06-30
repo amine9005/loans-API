@@ -6,7 +6,7 @@ const getUserById = (req: Request, res: Response) => {
   return userModel
     .findById(id)
     .then((user) => {
-      console.log("User Found was by id  successfully");
+      console.log("User Found by id  successfully");
       res.status(200).json({ user });
     })
     .catch((err) => {
