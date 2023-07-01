@@ -7,7 +7,7 @@ import { config } from "../config/config";
 const verifyJWT = (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   const { jwt } = req.cookies;
-  console.log(JSON.stringify(req.headers));
+  // console.log(JSON.stringify(req.headers));
 
   if (!authHeader?.startsWith("Bearer ") || !jwt) {
     // console.log("Auth header is Required");
