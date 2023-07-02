@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get("/", verified, controller.getAllUsers);
 router.get("/:id", verified, controller.getUserById);
+router.get("/emails/:email", verified, controller.getUserByEmail);
 
 export default router;

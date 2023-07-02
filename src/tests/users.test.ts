@@ -61,6 +61,35 @@ describe("Get User by id", () => {
   });
 });
 
+describe("Get User by email", () => {
+  test("should return 200 with a user", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const getUserByEmail = await supertest(app)
+      .get(api + "/emails/" + postUser.body.user.email)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+    console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(getUserByEmail.status).toEqual(200);
+    expect(getUserByEmail.type).toEqual("application/json");
+    expect(getUserByEmail.body.user).toEqual(
+      expect.objectContaining(usersFixtures.userOutput)
+    );
+  });
+});
+
 describe("Get All Users", () => {
   // user registration
   test("should return 200 all users", async () => {
