@@ -1,6 +1,6 @@
-const errorObject = expect.objectContaining({
+const errorObject = {
   error: expect.any(String),
-});
+};
 
 function makeId(length: number) {
   let result = "";

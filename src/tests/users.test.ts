@@ -61,6 +61,19 @@ describe("Get User by id", () => {
   });
 });
 
+describe("Get User by id with no credentials", () => {
+  test("should return 401 with an error", async () => {
+    const getUserById = await supertest(app).get(api + "/0");
+
+    expect(getUserById.status).toEqual(401);
+    expect(getUserById.type).toEqual("application/json");
+    console.log("body ", JSON.stringify(getUserById.body));
+    expect(getUserById.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
+
 describe("Get User by email", () => {
   test("should return 200 with a user", async () => {
     const postUser = await supertest(app)
