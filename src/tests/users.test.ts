@@ -145,3 +145,19 @@ describe("Get All Users", () => {
     );
   });
 });
+
+
+describe("Get All Users with no credentials", () => {
+  // user registration
+  test("should return 401 with an error", async () => {
+
+    const getAllUsers = await supertest(app)
+      .get(api)
+    expect(getAllUsers.status).toEqual(401);
+    expect(getAllUsers.type).toEqual("application/json");
+    expect(getAllUsers.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
+
