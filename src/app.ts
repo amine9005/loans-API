@@ -2,7 +2,7 @@ import express, { Application } from "express";
 import cors from "cors";
 import corsOptions from "./config/corsOptions";
 import { config } from "./config/config";
-
+import morgan from "morgan";
 import indexRouter from "./routes/router";
 import authRouter from "./routes/auth.router";
 import usersRouter from "./routes/users.router";
@@ -12,6 +12,7 @@ import cookieParser from "cookie-parser";
 function createServer() {
   const app: Application = express();
 
+  app.use(morgan("combined"));
   app.use(express.json());
   app.use(cors(corsOptions));
   app.use(cookieParser());
