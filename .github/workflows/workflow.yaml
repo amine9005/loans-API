@@ -28,15 +28,15 @@ jobs:
 
       - run: curl http://localhost:27017
 
-      - name: Clean Install
-        run: npm ci
+      - name: Yarn Install
+        run: yarn
 
       - name: Run ESLint
-        run: npm run lint 
+        run: yarn run lint 
         
       - name: run tests before building
-        run: npm test
+        run: yarn test
 
       - name: Build If possible
-        run: npm run build --if-present
+        run: yarn run build
 
