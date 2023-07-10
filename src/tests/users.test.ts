@@ -2,7 +2,7 @@ import createServer from "../app";
 import supertest from "supertest";
 import { config } from "../config/config";
 import usersFixtures from "./fixtures/users.fixtures";
-// import { createUserService } from "../services/users.service";
+
 import {
   connectToMemoryDB,
   disconnectFromMemoryDB,
@@ -10,14 +10,6 @@ import {
 } from "../config/connectToTestDB";
 const api = config.api.url + "/users";
 const authApi = config.api.url + "/auth";
-
-// jest.mock("../services/users.service", () => {
-//   return {
-//     createUserService: jest.fn(() => {
-//       return Promise.resolve([]);
-//     }),
-//   };
-// });
 
 const app = createServer();
 beforeAll(async () => {
@@ -103,7 +95,6 @@ describe("Get User by email", () => {
   });
 });
 
-
 describe("Get User by email with no credentials", () => {
   test("should return 401 with an error", async () => {
     const getUserByEmail = await supertest(app).get(api + "/emails/test");
@@ -146,13 +137,10 @@ describe("Get All Users", () => {
   });
 });
 
-
 describe("Get All Users with no credentials", () => {
   // user registration
   test("should return 401 with an error", async () => {
-
-    const getAllUsers = await supertest(app)
-      .get(api)
+    const getAllUsers = await supertest(app).get(api);
     expect(getAllUsers.status).toEqual(401);
     expect(getAllUsers.type).toEqual("application/json");
     expect(getAllUsers.body).toEqual(
@@ -160,4 +148,3 @@ describe("Get All Users with no credentials", () => {
     );
   });
 });
-

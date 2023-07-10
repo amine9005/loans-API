@@ -1,4 +1,3 @@
-import { Int32 } from "mongodb";
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IProducts {
@@ -7,7 +6,7 @@ export interface IProducts {
   pictures: Array<string>;
   slag: string;
   price: string;
-  quantity: Int32;
+  quantity: number;
 }
 
 export interface IProductModel extends IProducts, Document {}
@@ -18,7 +17,7 @@ const ProductSchema = new Schema({
   pictures: { type: Array<string>, required: true },
   slag: { type: String, required: true },
   price: { type: Number, required: true },
-  quantity: { type: Int32, required: true },
+  quantity: { type: Number, required: true },
 });
 
 export default mongoose.model<IProductModel>("Product", ProductSchema);
