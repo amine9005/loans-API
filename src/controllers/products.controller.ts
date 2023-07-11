@@ -7,7 +7,7 @@ const addProduct = async (req: Request, res: Response) => {
     return res.status(400).json({ error: "all fields are required" });
   }
 
-  const product = new ProductModel({
+  new ProductModel({
     name,
     thumbnail,
     pictures,
@@ -16,9 +16,9 @@ const addProduct = async (req: Request, res: Response) => {
     quantity,
   })
     .save()
-    .then(() => {
+    .then((product) => {
       console.log("Successfully created new product");
-      return res.status(200).json({ message: "successfully added a product" });
+      return res.status(200).json({ product });
     })
     .catch((err) => {
       console.log("Unable to create product! " + err.message);
@@ -26,4 +26,19 @@ const addProduct = async (req: Request, res: Response) => {
     });
 };
 
-export default { addProduct };
+const getProducts = async (req: Request, res: Response) => {
+  ProductModel.find()
+    .then((prods) => {
+      console.log("Products found");
+      return res.status(200).json({ products: prods });
+    })
+    .catch((err) => {
+      console.log("Unable to find products " + err.message);
+
+      return res
+        .status(500)
+        .json({ error: "Unable to find products " + err.message });
+    });
+};
+
+export default { addProduct, getProducts };
