@@ -67,7 +67,7 @@ describe("Add A Product", () => {
   });
 });
 
-describe("get A Product", () => {
+describe("get Products", () => {
   test("should return 200 with a Product", async () => {
     const postUser = await supertest(app)
       .post(authApi + "/register")
@@ -97,13 +97,24 @@ describe("get A Product", () => {
     const getProducts = await supertest(app)
       .get(api + "/")
       .set("Cookie", [...header["set-cookie"]])
-      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
-      .send(productsFixtures.productInput);
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
     expect(getProducts.status).toEqual(200);
     expect(getProducts.type).toEqual("application/json");
     expect(getProducts.body.products[0]).toEqual(
       expect.objectContaining(productsFixtures.productOutput)
+    );
+  });
+});
+
+describe("get Products with no credentials ", () => {
+  test("should return 401 with  Products", async () => {
+    const getProducts = await supertest(app).get(api + "/");
+
+    expect(getProducts.status).toEqual(401);
+    expect(getProducts.type).toEqual("application/json");
+    expect(getProducts.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
     );
   });
 });
