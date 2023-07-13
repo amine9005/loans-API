@@ -41,4 +41,19 @@ const getProducts = async (req: Request, res: Response) => {
     });
 };
 
-export default { addProduct, getProducts };
+const getProductById = async (req: Request, res: Response) => {
+  ProductModel.findById(req.params.id)
+    .then((prods) => {
+      console.log("Products found");
+      return res.status(200).json({ product: prods });
+    })
+    .catch((err) => {
+      console.log("Unable to find products " + err.message);
+
+      return res
+        .status(500)
+        .json({ error: "Unable to find products " + err.message });
+    });
+};
+
+export default { addProduct, getProducts, getProductById };
