@@ -51,9 +51,23 @@ const getProductById = async (req: Request, res: Response) => {
       console.log("Unable to find products " + err.message);
 
       return res
-        .status(500)
+        .status(404)
         .json({ error: "Unable to find products " + err.message });
     });
 };
 
-export default { addProduct, getProducts, getProductById };
+const deleteProduct = async (req: Request, res: Response) => {
+  ProductModel.deleteOne({ _id: req.params.id })
+    .then(() => {
+      console.log("product deleted");
+      return res.status(200).json({ message: "Product Deleted Successfully" });
+    })
+    .catch((err: Error) => {
+      console.log("Unable to delete product " + err.message);
+      return res
+        .status(500)
+        .json({ error: "Unable to delete product " + err.message });
+    });
+};
+
+export default { addProduct, getProducts, getProductById, deleteProduct };
