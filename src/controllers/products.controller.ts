@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
+import mongodb from "mongodb";
 
 const addProduct = async (req: Request, res: Response) => {
   const { name, thumbnail, pictures, slag, price, quantity } = req.body;
@@ -57,7 +58,7 @@ const getProductById = async (req: Request, res: Response) => {
 };
 
 const deleteProduct = async (req: Request, res: Response) => {
-  ProductModel.deleteOne({ _id: req.params.id })
+  ProductModel.findByIdAndDelete(req.params.id)
     .then(() => {
       console.log("product deleted");
       return res.status(200).json({ message: "Product Deleted Successfully" });
