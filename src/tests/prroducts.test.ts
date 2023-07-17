@@ -25,19 +25,6 @@ afterAll(async () => {
   await disconnectFromMemoryDB();
 });
 
-describe("add product with no credentials", () => {
-  test("should return 401 with an error", async () => {
-    const addProduct = await supertest(app)
-      .post(api + "/add")
-      .send(productsFixtures.productInput);
-    expect(addProduct.status).toEqual(401);
-    expect(addProduct.type).toEqual("application/json");
-    expect(addProduct.body).toEqual(
-      expect.objectContaining(usersFixtures.errorObject)
-    );
-  });
-});
-
 describe("Add A Product", () => {
   test("should return 200 with a Product", async () => {
     const postUser = await supertest(app)
@@ -64,6 +51,19 @@ describe("Add A Product", () => {
     expect(addProduct.body.product).toEqual(
       expect.objectContaining(productsFixtures.productOutput)
     );
+  });
+
+  describe("add product with no credentials", () => {
+    test("should return 401 with an error", async () => {
+      const addProduct = await supertest(app)
+        .post(api + "/add")
+        .send(productsFixtures.productInput);
+      expect(addProduct.status).toEqual(401);
+      expect(addProduct.type).toEqual("application/json");
+      expect(addProduct.body).toEqual(
+        expect.objectContaining(usersFixtures.errorObject)
+      );
+    });
   });
 });
 
@@ -105,17 +105,17 @@ describe("get Products", () => {
       expect.objectContaining(productsFixtures.productOutput)
     );
   });
-});
 
-describe("get Products with no credentials ", () => {
-  test("should return 401 with an error", async () => {
-    const getProducts = await supertest(app).get(api + "/");
+  describe("get Products with no credentials ", () => {
+    test("should return 401 with an error", async () => {
+      const getProducts = await supertest(app).get(api + "/");
 
-    expect(getProducts.status).toEqual(401);
-    expect(getProducts.type).toEqual("application/json");
-    expect(getProducts.body).toEqual(
-      expect.objectContaining(usersFixtures.errorObject)
-    );
+      expect(getProducts.status).toEqual(401);
+      expect(getProducts.type).toEqual("application/json");
+      expect(getProducts.body).toEqual(
+        expect.objectContaining(usersFixtures.errorObject)
+      );
+    });
   });
 });
 
@@ -160,17 +160,17 @@ describe("get Product by id", () => {
     );
     expect(getProducts.body.product._id).toEqual(id);
   });
-});
 
-describe("get Products with no credentials ", () => {
-  test("should return 401 with an error", async () => {
-    const getProducts = await supertest(app).get(api + "/4425");
+  describe("get Products with no credentials ", () => {
+    test("should return 401 with an error", async () => {
+      const getProducts = await supertest(app).get(api + "/4425");
 
-    expect(getProducts.status).toEqual(401);
-    expect(getProducts.type).toEqual("application/json");
-    expect(getProducts.body).toEqual(
-      expect.objectContaining(usersFixtures.errorObject)
-    );
+      expect(getProducts.status).toEqual(401);
+      expect(getProducts.type).toEqual("application/json");
+      expect(getProducts.body).toEqual(
+        expect.objectContaining(usersFixtures.errorObject)
+      );
+    });
   });
 });
 
@@ -224,5 +224,17 @@ describe("delete product", () => {
     // expect(getProduct.body).toEqual(
     //   expect.objectContaining(usersFixtures.errorObject)
     // );
+  });
+
+  describe("delete Products with no credentials ", () => {
+    test("should return 401 with an error", async () => {
+      const getProducts = await supertest(app).delete(api + "/delete/1");
+
+      expect(getProducts.status).toEqual(401);
+      expect(getProducts.type).toEqual("application/json");
+      expect(getProducts.body).toEqual(
+        expect.objectContaining(usersFixtures.errorObject)
+      );
+    });
   });
 });
