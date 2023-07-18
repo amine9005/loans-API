@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
-import mongodb from "mongodb";
 
 const addProduct = async (req: Request, res: Response) => {
   const { name, thumbnail, pictures, slag, price, quantity } = req.body;
@@ -71,4 +70,34 @@ const deleteProduct = async (req: Request, res: Response) => {
     });
 };
 
-export default { addProduct, getProducts, getProductById, deleteProduct };
+const updateProduct = async (req: Request, res: Response) => {
+  const { name, thumbnail, pictures, slag, price, quantity } = req.body;
+  if (!name || !thumbnail || !pictures || !slag || !price || !quantity) {
+    return res.status(400).json({ error: "all fields are required" });
+  }
+  ProductModel.findByIdAndUpdate(req.params.id)
+    .then((product) => {
+      (product.name = name),
+        (product.thumbnail = thumbnail),
+        (product.pictures = pictures),
+        (product.slag = slag),
+        (product.price = price);
+      product.quantity = quantity;
+      console.log("product updated");
+      return res.status(200).json({ product });
+    })
+    .catch((err: Error) => {
+      console.log("Unable to update product " + err.message);
+      return res
+        .status(500)
+        .json({ error: "Unable to update product " + err.message });
+    });
+};
+
+export default {
+  addProduct,
+  getProducts,
+  getProductById,
+  deleteProduct,
+  updateProduct,
+};

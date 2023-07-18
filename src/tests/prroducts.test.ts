@@ -238,3 +238,69 @@ describe("delete product", () => {
     });
   });
 });
+
+describe("Update product", () => {
+  test("should return 200 with an updated product", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+
+    const { header } = getUser;
+    const addProduct = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const id = addProduct.body.product._id;
+    const updateProduct = await supertest(app)
+      .put(api + "/update/" + id)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productUpdated);
+
+    expect(updateProduct.status).toEqual(200);
+    expect(updateProduct.type).toEqual("application/json");
+    expect(updateProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productUpdated)
+    );
+
+    // const getProduct = await supertest(app)
+    //   .get(api + "/" + id)
+    //   .set("Cookie", [...header["set-cookie"]])
+    //   .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    // expect(getProduct.status).toEqual(404);
+    // expect(getProduct.type).toEqual("application/json");
+    // expect(getProduct.body).toEqual(
+    //   expect.objectContaining(usersFixtures.errorObject)
+    // );
+  });
+
+  describe("delete Products with no credentials ", () => {
+    test("should return 401 with an error", async () => {
+      const getProducts = await supertest(app).put(api + "/update/1");
+
+      expect(getProducts.status).toEqual(401);
+      expect(getProducts.type).toEqual("application/json");
+      expect(getProducts.body).toEqual(
+        expect.objectContaining(usersFixtures.errorObject)
+      );
+    });
+  });
+});

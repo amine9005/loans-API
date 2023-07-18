@@ -13,6 +13,15 @@ const productInput = {
   quantity: 20,
 };
 
+const productUpdated = {
+  name: "Phone2",
+  thumbnail: "filepath2",
+  pictures: ["filepath3", "filepath4"],
+  slag: "slag-phone2",
+  price: 450,
+  quantity: 25,
+};
+
 const productOutput = {
   _id: expect.any(String),
   name: expect.any(String),
@@ -23,4 +32,4 @@ const productOutput = {
   quantity: expect.any(Number),
 };
 
-export default { errorObject, productInput, productOutput };
+export default { errorObject, productInput, productOutput, productUpdated };
