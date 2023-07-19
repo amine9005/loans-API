@@ -53,6 +53,35 @@ describe("Add A Product", () => {
     );
   });
 
+  describe("Add Products with Missing values", () => {
+    test("should return 400 with an error", async () => {
+      const postUser = await supertest(app)
+        .post(authApi + "/register")
+        .send(usersFixtures.userInput);
+      expect(postUser.status).toEqual(200);
+      const getUser = await supertest(app)
+        .post(authApi + "/login")
+        .send(usersFixtures.userLogin);
+      expect(getUser.status).toEqual(200);
+      expect(getUser.type).toEqual("application/json");
+      expect(getUser.body).toEqual(
+        expect.objectContaining(usersFixtures.accessToken)
+      );
+      const { header } = getUser;
+      const addProduct = await supertest(app)
+        .post(api + "/add")
+        .set("Cookie", [...header["set-cookie"]])
+        .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+        .send({});
+
+      expect(addProduct.status).toEqual(400);
+      expect(addProduct.type).toEqual("application/json");
+      expect(addProduct.body).toEqual(
+        expect.objectContaining(usersFixtures.errorObject)
+      );
+    });
+  });
+
   describe("add product with no credentials", () => {
     test("should return 401 with an error", async () => {
       const addProduct = await supertest(app)
