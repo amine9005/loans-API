@@ -320,14 +320,37 @@ describe("Update product", () => {
     //   expect.objectContaining(usersFixtures.errorObject)
     // );
   });
+  describe("Add Products with Missing values", () => {
+    test("should return 400 with an error", async () => {
+      const postUser = await supertest(app)
+        .post(authApi + "/register")
+        .send(usersFixtures.userInput);
+      expect(postUser.status).toEqual(200);
+      const getUser = await supertest(app)
+        .post(authApi + "/login")
+        .send(usersFixtures.userLogin);
+      expect(getUser.status).toEqual(200);
+      expect(getUser.type).toEqual("application/json");
+      expect(getUser.body).toEqual(
+        expect.objectContaining(usersFixtures.accessToken)
+      );
+      const { header } = getUser;
+      const addProduct = await supertest(app)
+        .post(api + "/add")
+        .set("Cookie", [...header["set-cookie"]])
+        .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+        .send({});
 
-  describe("delete Products with no credentials ", () => {
-    test("should return 401 with an error", async () => {
-      const getProducts = await supertest(app).put(api + "/update/1");
+      const id = addProduct.body.product._id;
+      const updateProduct = await supertest(app)
+        .put(api + "/update/" + id)
+        .set("Cookie", [...header["set-cookie"]])
+        .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+        .send({});
 
-      expect(getProducts.status).toEqual(401);
-      expect(getProducts.type).toEqual("application/json");
-      expect(getProducts.body).toEqual(
+      expect(updateProduct.status).toEqual(400);
+      expect(updateProduct.type).toEqual("application/json");
+      expect(updateProduct.body).toEqual(
         expect.objectContaining(usersFixtures.errorObject)
       );
     });
