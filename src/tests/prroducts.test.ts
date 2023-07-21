@@ -339,7 +339,13 @@ describe("Update product", () => {
         .post(api + "/add")
         .set("Cookie", [...header["set-cookie"]])
         .set("Authorization", `Bearer ${getUser.body.accessToken}`)
-        .send({});
+        .send(productsFixtures.productInput);
+
+      expect(addProduct.status).toEqual(200);
+      expect(addProduct.type).toEqual("application/json");
+      expect(addProduct.body.product).toEqual(
+        expect.objectContaining(productsFixtures.productOutput)
+      );
 
       const id = addProduct.body.product._id;
       const updateProduct = await supertest(app)
