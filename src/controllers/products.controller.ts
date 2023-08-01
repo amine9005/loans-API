@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
 
 const addProduct = async (req: Request, res: Response) => {
-  console.log("Here is Here");
-
   const { name, thumbnail, pictures, slag, price, quantity } = req.body;
   if (!name || !thumbnail || !pictures || !slag || !price || !quantity) {
     return res.status(400).json({ error: "all fields are required" });
