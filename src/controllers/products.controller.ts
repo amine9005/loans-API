@@ -2,8 +2,39 @@ import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
 
 const addProduct = async (req: Request, res: Response) => {
-  const { name, thumbnail, pictures, slag, price, quantity } = req.body;
-  if (!name || !thumbnail || !pictures || !slag || !price || !quantity) {
+  const {
+    name,
+    thumbnail,
+    pictures,
+    slag,
+    price,
+    short_description,
+    description,
+    featured,
+    quantity,
+  } = req.body;
+
+  if (
+    !name ||
+    !thumbnail ||
+    !pictures ||
+    !slag ||
+    !price ||
+    !quantity ||
+    !short_description ||
+    !description ||
+    featured == undefined
+  ) {
+    console.log("product body: " + JSON.stringify(req.body));
+    console.log("name: " + JSON.stringify(name));
+    console.log("thumbnail: " + JSON.stringify(thumbnail));
+    console.log("pictures: " + JSON.stringify(pictures));
+    console.log("slag: " + JSON.stringify(slag));
+    console.log("price: " + JSON.stringify(price));
+    console.log("short_description: " + JSON.stringify(short_description));
+    console.log("description: " + JSON.stringify(description));
+    console.log("featured: " + JSON.stringify(featured));
+    console.log("quantity: " + JSON.stringify(quantity));
     return res.status(400).json({ error: "all fields are required" });
   }
   new ProductModel({
@@ -13,6 +44,9 @@ const addProduct = async (req: Request, res: Response) => {
     slag,
     price,
     quantity,
+    short_description,
+    description,
+    featured,
   })
     .save()
     .then((product) => {
@@ -70,18 +104,41 @@ const deleteProduct = async (req: Request, res: Response) => {
 };
 
 const updateProduct = async (req: Request, res: Response) => {
-  const { name, thumbnail, pictures, slag, price, quantity } = req.body;
-  if (!name || !thumbnail || !pictures || !slag || !price || !quantity) {
+  const {
+    name,
+    thumbnail,
+    pictures,
+    slag,
+    price,
+    quantity,
+    short_description,
+    description,
+    featured,
+  } = req.body;
+  if (
+    !name ||
+    !thumbnail ||
+    !pictures ||
+    !slag ||
+    !price ||
+    !quantity ||
+    !short_description ||
+    !description ||
+    featured == undefined
+  ) {
     return res.status(400).json({ error: "all fields are required" });
   }
   ProductModel.findByIdAndUpdate(req.params.id)
     .then((product) => {
-      (product.name = name),
-        (product.thumbnail = thumbnail),
-        (product.pictures = pictures),
-        (product.slag = slag),
-        (product.price = price);
+      product.name = name;
+      product.thumbnail = thumbnail;
+      product.pictures = pictures;
+      product.slag = slag;
+      product.price = price;
       product.quantity = quantity;
+      product.short_description = short_description;
+      product.description = description;
+      product.featured = featured;
       console.log("product updated");
       return res.status(200).json({ product });
     })
