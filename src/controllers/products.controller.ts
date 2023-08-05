@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
+import { ObjectId } from "mongodb";
 
 const addProduct = async (req: Request, res: Response) => {
   const {
@@ -128,17 +129,23 @@ const updateProduct = async (req: Request, res: Response) => {
   ) {
     return res.status(400).json({ error: "all fields are required" });
   }
-  ProductModel.findByIdAndUpdate(req.params.id)
+  ProductModel.updateOne(
+    { _id: new ObjectId(req.params.id) },
+    {
+      $set: {
+        name,
+        thumbnail,
+        pictures,
+        slag,
+        price,
+        quantity,
+        short_description,
+        description,
+        featured,
+      },
+    }
+  )
     .then((product) => {
-      product.name = name;
-      product.thumbnail = thumbnail;
-      product.pictures = pictures;
-      product.slag = slag;
-      product.price = price;
-      product.quantity = quantity;
-      product.short_description = short_description;
-      product.description = description;
-      product.featured = featured;
       console.log("product updated");
       return res.status(200).json({ product });
     })
