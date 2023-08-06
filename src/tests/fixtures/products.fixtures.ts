@@ -2,6 +2,9 @@ const errorObject = {
   error: expect.any(String),
 };
 
+const messageObject = {
+  message: expect.any(String),
+};
 const productInput = {
   name: "Phone",
   thumbnail: "filepath",
@@ -39,4 +42,10 @@ const productOutput = {
   quantity: expect.any(Number),
 };
 
-export default { errorObject, productInput, productOutput, productUpdated };
+export default {
+  errorObject,
+  productInput,
+  productOutput,
+  productUpdated,
+  messageObject,
+};

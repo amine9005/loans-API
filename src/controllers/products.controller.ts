@@ -147,7 +147,7 @@ const updateProduct = async (req: Request, res: Response) => {
   )
     .then((product) => {
       console.log("product updated");
-      return res.status(200).json({ product });
+      return res.status(200).json({ message: "product updated successfully " });
     })
     .catch((err: Error) => {
       console.log("Unable to update product " + err.message);
