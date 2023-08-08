@@ -46,5 +46,11 @@ describe("Add Order", () => {
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
       .send(orderFixtures.orderInput);
+
+    expect(addOrder.status).toEqual(200);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body.order).toEqual(
+      expect.objectContaining(orderFixtures.orderOutput)
+    );
   });
 });
