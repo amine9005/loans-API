@@ -54,3 +54,46 @@ describe("Add Order", () => {
     );
   });
 });
+
+describe("addOrder without authorization", () => {
+  test("should return 401 with an error", async () => {
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .send(orderFixtures.orderInput);
+
+    expect(addOrder.status).toEqual(401);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
+
+describe("addOrder without Missing values", () => {
+  test("should return 401 with an error", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send({});
+
+    expect(addOrder.status).toEqual(400);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
