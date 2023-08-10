@@ -50,4 +50,16 @@ const addOrder = (req: Request, res: Response) => {
     });
 };
 
-export default { addOrder };
+const getAllOrders = (req: Request, res: Response) => {
+  ordersModel
+    .find()
+    .then((orders) => {
+      return res.status(200).json({ orders });
+    })
+    .catch((err) => {
+      return res
+        .status(500)
+        .json({ error: "Unable to load orders: " + err.message });
+    });
+};
+export default { addOrder, getAllOrders };
