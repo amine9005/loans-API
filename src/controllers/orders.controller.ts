@@ -62,4 +62,55 @@ const getAllOrders = (req: Request, res: Response) => {
         .json({ error: "Unable to load orders: " + err.message });
     });
 };
-export default { addOrder, getAllOrders };
+
+const updateOrder = (req: Request, res: Response) => {
+  const {
+    orderItems,
+    shippingAddress,
+    paymentMethod,
+    itemsPrice,
+    shippingPrice,
+    totalPrice,
+  } = req.body;
+
+  if (
+    itemsPrice == undefined ||
+    totalPrice == undefined ||
+    orderItems == undefined ||
+    shippingAddress == undefined ||
+    paymentMethod == undefined ||
+    shippingPrice == undefined
+  ) {
+    console.log("itemsPrice", itemsPrice);
+    console.log("totalPrice", totalPrice);
+    console.log("orderItems", orderItems);
+    console.log("shippingAddress", shippingAddress);
+    console.log("paymentMethod", paymentMethod);
+    console.log("shippingPrice", shippingPrice);
+
+    console.log("all fields are required");
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  ordersModel
+    .updateOne(
+      { _id: new ObjectId(req.params.id) },
+      {
+        orderItems,
+        shippingAddress,
+        paymentMethod,
+        itemsPrice,
+        shippingPrice,
+        totalPrice,
+      }
+    )
+    .then((resp) => {
+      return res.status(200).json({ message: "Successfully updated order" });
+    })
+    .catch((err) => {
+      return res
+        .status(500)
+        .json({ error: "Unable to update product: " + err.message });
+    });
+};
+export default { addOrder, getAllOrders, updateOrder };
