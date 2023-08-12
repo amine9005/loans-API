@@ -113,4 +113,17 @@ const updateOrder = (req: Request, res: Response) => {
         .json({ error: "Unable to update product: " + err.message });
     });
 };
-export default { addOrder, getAllOrders, updateOrder };
+
+const deleteOrder = (req: Request, res: Response) => {
+  ordersModel
+    .deleteOne({ _id: new ObjectId(req.params.id) })
+    .then(() => {
+      return res.status(200).json({ message: "Successfully deleted order" });
+    })
+    .catch((err) => {
+      return res
+        .status(500)
+        .json({ error: "Unable to delete order: " + err.message });
+    });
+};
+export default { addOrder, getAllOrders, updateOrder, deleteOrder };

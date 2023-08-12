@@ -7,6 +7,15 @@ const orderInput = {
   totalPrice: 500,
 };
 
+const orderUpdate = {
+  orderItems: ["233", "4df"],
+  shippingAddress: "Address",
+  paymentMethod: "payment2",
+  itemsPrice: [350, 250],
+  shippingPrice: 100,
+  totalPrice: 750,
+};
+
 const orderOutput = {
   _id: expect.any(String),
   orderItems: expect.any(Array<string>),
@@ -17,4 +26,4 @@ const orderOutput = {
   totalPrice: expect.any(Number),
 };
 
-export default { orderInput, orderOutput };
+export default { orderInput, orderOutput, orderUpdate };
