@@ -305,81 +305,81 @@ describe("Update Order with missing values", () => {
   });
 });
 
-// describe("Delete Order", () => {
-//   test("should return 200 with a message", async () => {
-//     const postUser = await supertest(app)
-//       .post(authApi + "/register")
-//       .send(usersFixtures.userInput);
-//     expect(postUser.status).toEqual(200);
-//     const getUser = await supertest(app)
-//       .post(authApi + "/login")
-//       .send(usersFixtures.userLogin);
-//     expect(getUser.status).toEqual(200);
-//     expect(getUser.type).toEqual("application/json");
-//     expect(getUser.body).toEqual(
-//       expect.objectContaining(usersFixtures.accessToken)
-//     );
-//     const { header } = getUser;
-//     const addOrder = await supertest(app)
-//       .post(api + "/add")
-//       .set("Cookie", [...header["set-cookie"]])
-//       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
-//       .send(orderFixtures.orderInput);
+describe("Delete Order", () => {
+  test("should return 200 with a message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(orderFixtures.orderInput);
 
-//     expect(addOrder.status).toEqual(200);
-//     expect(addOrder.type).toEqual("application/json");
-//     expect(addOrder.body.order).toEqual(
-//       expect.objectContaining(orderFixtures.orderOutput)
-//     );
-//     const { _id } = addOrder.body.order;
+    expect(addOrder.status).toEqual(200);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body.order).toEqual(
+      expect.objectContaining(orderFixtures.orderOutput)
+    );
+    const { _id } = addOrder.body.order;
 
-//     const deleteOrder = await supertest(app)
-//       .delete(api + "/delete/" + _id)
-//       .set("Cookie", [...header["set-cookie"]])
-//       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+    const deleteOrder = await supertest(app)
+      .delete(api + "/delete/" + _id)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
-//     expect(deleteOrder.status).toEqual(200);
-//     expect(deleteOrder.type).toEqual("application/json");
-//     expect(deleteOrder.body).toEqual(
-//       expect.objectContaining(usersFixtures.statusMessage)
-//     );
-//   });
-// });
+    expect(deleteOrder.status).toEqual(200);
+    expect(deleteOrder.type).toEqual("application/json");
+    expect(deleteOrder.body).toEqual(
+      expect.objectContaining(usersFixtures.statusMessage)
+    );
+  });
+});
 
-// describe("Delete Order without authorization", () => {
-//   test("should return 401 with an error message", async () => {
-//     const postUser = await supertest(app)
-//       .post(authApi + "/register")
-//       .send(usersFixtures.userInput);
-//     expect(postUser.status).toEqual(200);
-//     const getUser = await supertest(app)
-//       .post(authApi + "/login")
-//       .send(usersFixtures.userLogin);
-//     expect(getUser.status).toEqual(200);
-//     expect(getUser.type).toEqual("application/json");
-//     expect(getUser.body).toEqual(
-//       expect.objectContaining(usersFixtures.accessToken)
-//     );
-//     const { header } = getUser;
-//     const addOrder = await supertest(app)
-//       .post(api + "/add")
-//       .set("Cookie", [...header["set-cookie"]])
-//       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
-//       .send(orderFixtures.orderInput);
+describe("Delete Order without authorization", () => {
+  test("should return 401 with an error message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(orderFixtures.orderInput);
 
-//     expect(addOrder.status).toEqual(200);
-//     expect(addOrder.type).toEqual("application/json");
-//     expect(addOrder.body.order).toEqual(
-//       expect.objectContaining(orderFixtures.orderOutput)
-//     );
-//     const { _id } = addOrder.body.order;
+    expect(addOrder.status).toEqual(200);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body.order).toEqual(
+      expect.objectContaining(orderFixtures.orderOutput)
+    );
+    const { _id } = addOrder.body.order;
 
-//     const deleteOrder = await supertest(app).delete(api + "/delete/" + _id);
+    const deleteOrder = await supertest(app).delete(api + "/delete/" + _id);
 
-//     expect(deleteOrder.status).toEqual(401);
-//     expect(deleteOrder.type).toEqual("application/json");
-//     expect(deleteOrder.body).toEqual(
-//       expect.objectContaining(usersFixtures.errorObject)
-//     );
-//   });
-// });
+    expect(deleteOrder.status).toEqual(401);
+    expect(deleteOrder.type).toEqual("application/json");
+    expect(deleteOrder.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
