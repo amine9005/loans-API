@@ -17,6 +17,7 @@ const orderUpdate = {
 };
 
 const orderOutput = {
+  __v: expect.any(Number),
   _id: expect.any(String),
   orderItems: expect.any(Array<string>),
   shippingAddress: expect.any(String),

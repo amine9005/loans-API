@@ -126,4 +126,23 @@ const deleteOrder = (req: Request, res: Response) => {
         .json({ error: "Unable to delete order: " + err.message });
     });
 };
-export default { addOrder, getAllOrders, updateOrder, deleteOrder };
+
+const getOrderById = (req: Request, res: Response) => {
+  ordersModel
+    .find({ _id: req.params.id })
+    .then((order) => {
+      return res.status(200).json({ order });
+    })
+    .catch((err) => {
+      return res
+        .status(404)
+        .json({ error: "Unable to find order: " + err.message });
+    });
+};
+export default {
+  addOrder,
+  getAllOrders,
+  updateOrder,
+  deleteOrder,
+  getOrderById,
+};
