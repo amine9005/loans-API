@@ -413,7 +413,7 @@ describe("Get Order By Id", () => {
     const { _id } = addOrder.body.order;
 
     const getOrder = await supertest(app)
-      .get(api + "/orders/" + _id)
+      .get(api + "/" + _id)
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
@@ -456,7 +456,7 @@ describe("Get Order By Id Without Authorization", () => {
     );
     const { _id } = addOrder.body.order;
 
-    const getOrder = await supertest(app).get(api + "/orders/" + _id);
+    const getOrder = await supertest(app).get(api + "/" + _id);
 
     expect(getOrder.status).toEqual(401);
     expect(getOrder.type).toEqual("application/json");

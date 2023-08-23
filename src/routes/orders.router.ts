@@ -8,6 +8,6 @@ router.post("/add", verified, controller.addOrder);
 router.get("/", verified, controller.getAllOrders);
 router.put("/update/:id", verified, controller.updateOrder);
 router.delete("/delete/:id", verified, controller.deleteOrder);
-router.get("/orders/:id", verified, controller.getOrderById);
+router.get("/:id", verified, controller.getOrderById);
 
 export default router;
