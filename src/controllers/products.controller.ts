@@ -145,7 +145,7 @@ const updateProduct = async (req: Request, res: Response) => {
       },
     }
   )
-    .then((product) => {
+    .then(() => {
       console.log("product updated");
       return res.status(200).json({ message: "product updated successfully " });
     })
@@ -157,10 +157,19 @@ const updateProduct = async (req: Request, res: Response) => {
     });
 };
 
+const addThumbnail = async (req: Request, res: Response) => {
+  const path = await req.file.path;
+  if (path !== null) {
+    return res.status(200).json({ path });
+  }
+  return res.status(500).json({ error: "Unable to upload thumbnail" });
+};
+
 export default {
   addProduct,
   getProducts,
   getProductById,
   deleteProduct,
   updateProduct,
+  addThumbnail,
 };
