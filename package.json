@@ -57,6 +57,7 @@
     "express-rate-limit": "^6.7.0",
     "install": "^0.13.0",
     "jsonwebtoken": "^9.0.0",
+    "mkdirp": "^3.0.1",
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.7",
     "morgan": "^1.10.0",

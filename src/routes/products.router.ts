@@ -7,6 +7,11 @@ const router = express.Router();
 
 router.get("/", verified, controller.getProducts);
 router.post("/add", verified, controller.addProduct);
+router.post(
+  "/thumbnail",
+  [verified, upload.single("thumbnail")],
+  controller.addThumbnail
+);
 router.get("/:id", verified, controller.getProductById);
 router.delete("/delete/:id", verified, controller.deleteProduct);
 router.put("/update/:id", verified, controller.updateProduct);

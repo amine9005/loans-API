@@ -158,8 +158,10 @@ const updateProduct = async (req: Request, res: Response) => {
 };
 
 const addThumbnail = async (req: Request, res: Response) => {
-  const path = await req.file.path;
-  if (path !== null) {
+  console.log("adding Thumbnail");
+  if (req.file) {
+    const path = await req.file.path;
+    console.log("path: ", path);
     return res.status(200).json({ path });
   }
   return res.status(500).json({ error: "Unable to upload thumbnail" });
