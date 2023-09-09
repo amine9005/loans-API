@@ -12,6 +12,11 @@ router.post(
   [verified, upload.single("thumbnail")],
   controller.addThumbnail
 );
+router.post(
+  "/pictures",
+  [verified, upload.array("pictures[]")],
+  controller.addPictures
+);
 router.get("/:id", verified, controller.getProductById);
 router.delete("/delete/:id", verified, controller.deleteProduct);
 router.put("/update/:id", verified, controller.updateProduct);

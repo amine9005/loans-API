@@ -158,13 +158,25 @@ const updateProduct = async (req: Request, res: Response) => {
 };
 
 const addThumbnail = async (req: Request, res: Response) => {
-  console.log("adding Thumbnail");
+  // console.log("adding Thumbnail");
   if (req.file) {
     const path = await req.file.path;
-    console.log("path: ", path);
+    // console.log("path: ", path);
     return res.status(200).json({ path });
   }
   return res.status(500).json({ error: "Unable to upload thumbnail" });
+};
+
+const addPictures = async (req: Request, res: Response) => {
+  const paths: string[] = [];
+
+  if (req.files) {
+    const files = req.files as Express.Multer.File[];
+
+    for (const file of files) {
+      paths.push(file.path);
+    }
+  }
 };
 
 export default {
@@ -174,4 +186,5 @@ export default {
   deleteProduct,
   updateProduct,
   addThumbnail,
+  addPictures,
 };
