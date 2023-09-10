@@ -157,7 +157,7 @@ const updateProduct = async (req: Request, res: Response) => {
     });
 };
 
-const addThumbnail = async (req: Request, res: Response) => {
+const addPicture = async (req: Request, res: Response) => {
   // console.log("adding Thumbnail");
   if (req.file) {
     const path = await req.file.path;
@@ -171,6 +171,7 @@ const addPictures = async (req: Request, res: Response) => {
   const paths: string[] = [];
 
   if (req.files) {
+    // console.log("paths: ", req.files);
     const files = req.files as Express.Multer.File[];
 
     for (const file of files) {
@@ -185,6 +186,6 @@ export default {
   getProductById,
   deleteProduct,
   updateProduct,
-  addThumbnail,
+  addPicture,
   addPictures,
 };

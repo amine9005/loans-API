@@ -8,13 +8,13 @@ const router = express.Router();
 router.get("/", verified, controller.getProducts);
 router.post("/add", verified, controller.addProduct);
 router.post(
-  "/thumbnail",
-  [verified, upload.single("thumbnail")],
-  controller.addThumbnail
+  "/picture",
+  [verified, upload.single("picture")],
+  controller.addPicture
 );
 router.post(
   "/pictures",
-  [verified, upload.array("pictures[]")],
+  [verified, upload.array("pictures")],
   controller.addPictures
 );
 router.get("/:id", verified, controller.getProductById);
