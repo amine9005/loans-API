@@ -53,6 +53,89 @@ describe("Get User by id", () => {
   });
 });
 
+describe("Update User", () => {
+  test("should return 200 a status message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const updateUser = await supertest(app)
+      .put(api + "/update/" + postUser.body.user._id)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(usersFixtures.userUpdate);
+    console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(updateUser.status).toEqual(200);
+    expect(updateUser.type).toEqual("application/json");
+    expect(updateUser.body).toEqual(usersFixtures.statusMessage);
+  });
+});
+
+describe("Update User with No credentials ", () => {
+  test("should return 401 an error message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const updateUser = await supertest(app)
+      .put(api + "/update/" + postUser.body.user._id)
+      .set("Cookie", [...header["set-cookie"]])
+      .send(usersFixtures.userUpdate);
+    console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(updateUser.status).toEqual(401);
+    expect(updateUser.type).toEqual("application/json");
+    expect(updateUser.body).toEqual(usersFixtures.errorObject);
+  });
+});
+
+describe("Update User without credentials", () => {
+  test("should return 400 with an error message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const updateUser = await supertest(app)
+      .put(api + "/update/" + postUser.body.user._id)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send({});
+    console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(updateUser.status).toEqual(400);
+    expect(updateUser.type).toEqual("application/json");
+    expect(updateUser.body).toEqual(usersFixtures.errorObject);
+  });
+});
+
 describe("Get User by id with no credentials", () => {
   test("should return 401 with an error", async () => {
     const getUserById = await supertest(app).get(api + "/0");

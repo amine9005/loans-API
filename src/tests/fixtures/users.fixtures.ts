@@ -27,12 +27,21 @@ function createRandomUser() {
 }
 
 const userInput = {
-  firstName: "Amine",
+  firstName: "Test User",
   middleName: "S",
-  lastName: "Selmi",
+  lastName: "Testing",
   email: "user_user",
   dob: new Date(),
   password: "12550",
+};
+
+const userUpdate = {
+  firstName: "Test User 2",
+  middleName: "S2",
+  lastName: "Testing 2",
+  email: "user_user2",
+  dob: new Date(),
+  password: "12750",
 };
 
 const userLogin = {
@@ -73,4 +82,5 @@ export default {
   userLogin,
   accessToken,
   statusMessage,
+  userUpdate,
 };
