@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import userModel from "../models/user.model";
 import { ObjectId } from "mongodb";
-import { random, authentication } from "../helpers";
 
 const getUserById = (req: Request, res: Response) => {
   const { id } = req.params;
@@ -45,8 +44,7 @@ const updateUser = (req: Request, res: Response) => {
     middleName == null ||
     lastName == null ||
     email == null ||
-    dob == null ||
-    password == null
+    dob == null
   ) {
     console.log("User body: " + JSON.stringify(req.body));
     console.log("firstName: " + JSON.stringify(firstName));
@@ -54,10 +52,8 @@ const updateUser = (req: Request, res: Response) => {
     console.log("lastName: " + JSON.stringify(lastName));
     console.log("email: " + JSON.stringify(email));
     console.log("dob: " + JSON.stringify(dob));
-    console.log("password: " + JSON.stringify(password));
     return res.status(400).json({ error: "all fields are required" });
   }
-  const salt = random();
 
   userModel
     .updateOne(
@@ -68,18 +64,19 @@ const updateUser = (req: Request, res: Response) => {
         middleName: middleName,
         email: email,
         dob: dob,
-        authentication: { salt, password: authentication(salt, password) },
       }
     )
     .then(() => {
-      console.log("product updated");
-      return res.status(200).json({ message: "product updated successfully " });
+      console.log("Customer data updated");
+      return res
+        .status(200)
+        .json({ message: "Customer data updated successfully " });
     })
     .catch((err) => {
-      console.log("Unable to update product " + err.message);
+      console.log("Unable to update Customer data " + err.message);
       return res
         .status(500)
-        .json({ error: "Unable to update product " + err.message });
+        .json({ error: "Unable to update Customer data " + err.message });
     });
 };
 const deleteUser = (req: Request, res: Response) => {
