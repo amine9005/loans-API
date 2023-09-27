@@ -231,3 +231,101 @@ describe("Get All Users with no credentials", () => {
     );
   });
 });
+
+describe("Delete User by id", () => {
+  test("should return 200 with a message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const deleteUserById = await supertest(app)
+      .delete(api + "/delete/" + postUser.body.user._id)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+    // console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(deleteUserById.status).toEqual(200);
+    expect(deleteUserById.type).toEqual("application/json");
+    expect(deleteUserById.body).toEqual(
+      expect.objectContaining(usersFixtures.statusMessage)
+    );
+  });
+});
+
+describe("Delete User by id with no credentials ", () => {
+  test("should return 401 error a message", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const deleteUserById = await supertest(app)
+      .delete(api + "/delete/" + postUser.body.user._id)
+      .set("Cookie", [...header["set-cookie"]]);
+    // console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(deleteUserById.status).toEqual(401);
+    expect(deleteUserById.type).toEqual("application/json");
+    expect(deleteUserById.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
+
+// describe("Delete User by id, user does not exist", () => {
+//   test("should return 500 with an error message", async () => {
+//     const postUser = await supertest(app)
+//       .post(authApi + "/register")
+//       .send(usersFixtures.userInput);
+//     expect(postUser.status).toEqual(200);
+//     const getUser = await supertest(app)
+//       .post(authApi + "/login")
+//       .send(usersFixtures.userLogin);
+//     expect(getUser.status).toEqual(200);
+//     expect(getUser.type).toEqual("application/json");
+//     expect(getUser.body).toEqual(
+//       expect.objectContaining(usersFixtures.accessToken)
+//     );
+//     const { header } = getUser;
+//     const deleteUserById = await supertest(app)
+//       .delete(api + "/delete/" + postUser.body.user._id)
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+//     // console.log("help: " + JSON.stringify(postUser.body));
+
+//     expect(deleteUserById.status).toEqual(200);
+//     expect(deleteUserById.type).toEqual("application/json");
+//     expect(deleteUserById.body).toEqual(
+//       expect.objectContaining(usersFixtures.statusMessage)
+//     );
+
+//     const deleteUserById2 = await supertest(app)
+//       .delete(api + "/delete/" + postUser.body.user._id)
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+//     // console.log("help: " + JSON.stringify(postUser.body));
+
+//     expect(deleteUserById2.status).toEqual(500);
+//     expect(deleteUserById2.type).toEqual("application/json");
+//     expect(deleteUserById2.body).toEqual(
+//       expect.objectContaining(usersFixtures.errorObject)
+//     );
+//   });
+// });

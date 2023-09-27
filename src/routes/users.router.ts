@@ -8,5 +8,6 @@ router.get("/", verified, controller.getAllUsers);
 router.get("/:id", verified, controller.getUserById);
 router.get("/emails/:email", verified, controller.getUserByEmail);
 router.put("/update/:id", verified, controller.updateUser);
+router.delete("/delete/:id", verified, controller.deleteUser);
 
 export default router;

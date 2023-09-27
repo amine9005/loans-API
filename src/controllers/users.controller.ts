@@ -81,7 +81,16 @@ const updateUser = (req: Request, res: Response) => {
 };
 const deleteUser = (req: Request, res: Response) => {
   //by id findOneAndDelete(_id:id)
-  res.status(501).json({});
+  userModel
+    .findByIdAndDelete(req.params.id)
+    .then((resp) => {
+      console.log("user deleted");
+      return res.status(200).json({ message: "user deleted successfully" });
+    })
+    .catch((err) => {
+      console.log("Unable to delete user" + err.message);
+      return res.status(500).json({ error: "User deleted successfully" });
+    });
 };
 export const getAllUsers = async (req: Request, res: Response) => {
   return userModel
