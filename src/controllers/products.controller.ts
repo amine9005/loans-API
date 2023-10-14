@@ -104,6 +104,19 @@ const deleteProduct = async (req: Request, res: Response) => {
     });
 };
 
+const getProductByName = async (req: Request, res: Response) => {
+  ProductModel.find({ name: req.params.name })
+    .then((resp) => {
+      console.log("found products successfully");
+      return res.status(200).json({ products: resp });
+    })
+    .catch((err) => {
+      console.log("err unable to find products: ", err.message);
+      return res
+        .status(500)
+        .json({ error: "Unable to find products " + err.message });
+    });
+};
 const updateProduct = async (req: Request, res: Response) => {
   const {
     name,
@@ -188,4 +201,5 @@ export default {
   updateProduct,
   addPicture,
   addPictures,
+  getProductByName,
 };
