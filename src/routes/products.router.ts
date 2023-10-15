@@ -20,6 +20,6 @@ router.post(
 router.get("/:id", verified, controller.getProductById);
 router.delete("/delete/:id", verified, controller.deleteProduct);
 router.put("/update/:id", verified, controller.updateProduct);
-router.put("/getByName/:name", verified, controller.getProductByName);
+router.get("/getByName/:name", verified, controller.getProductByName);
 
 export default router;

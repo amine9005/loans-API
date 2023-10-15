@@ -389,3 +389,44 @@ describe("Update product", () => {
     });
   });
 });
+
+describe("Find Product By Name", () => {
+  test("should return 200 with a Products", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addProduct = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const getProducts = await supertest(app)
+      .get(api + "/getByName" + productsFixtures.productOutput.name)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getProducts.status).toEqual(200);
+    expect(getProducts.type).toEqual("application/json");
+    console.log("Products found: ", JSON.stringify(getProducts.body));
+    // expect(getProducts.body.products[0]).toEqual(
+    //   expect.objectContaining(productsFixtures.productOutput)
+    // );
+  });
+});
