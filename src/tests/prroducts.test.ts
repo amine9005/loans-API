@@ -416,17 +416,22 @@ describe("Find Product By Name", () => {
     expect(addProduct.body.product).toEqual(
       expect.objectContaining(productsFixtures.productOutput)
     );
+    // console.log("saved Product: ", JSON.stringify(addProduct.body.product));
+    // console.log(
+    //   "saved Product Name: ",
+    //   JSON.stringify(addProduct.body.product.name)
+    // );
 
     const getProducts = await supertest(app)
-      .get(api + "/getByName" + productsFixtures.productOutput.name)
+      .get(api + "/getByName/" + addProduct.body.product.name)
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
     expect(getProducts.status).toEqual(200);
     expect(getProducts.type).toEqual("application/json");
-    console.log("Products found: ", JSON.stringify(getProducts.body));
-    // expect(getProducts.body.products[0]).toEqual(
-    //   expect.objectContaining(productsFixtures.productOutput)
-    // );
+    // console.log("Products found: ", JSON.stringify(getProducts.body));
+    expect(getProducts.body.products[0]).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
   });
 });
