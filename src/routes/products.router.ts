@@ -21,5 +21,10 @@ router.get("/:id", verified, controller.getProductById);
 router.delete("/delete/:id", verified, controller.deleteProduct);
 router.put("/update/:id", verified, controller.updateProduct);
 router.get("/getByName/:name", verified, controller.getProductByName);
+router.get(
+  "/getByPriceGreater/:price",
+  verified,
+  controller.getProductGreaterThan
+);
 
 export default router;

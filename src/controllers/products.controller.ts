@@ -117,6 +117,20 @@ const getProductByName = async (req: Request, res: Response) => {
         .json({ error: "Unable to find products " + err.message });
     });
 };
+
+const getProductGreaterThan = async (req: Request, res: Response) => {
+  ProductModel.find({ price: { $gte: req.params.price } })
+    .then((resp) => {
+      console.log("found products successfully");
+      return res.status(200).json({ products: resp });
+    })
+    .catch((err) => {
+      console.log("err unable to find products: ", err.message);
+      return res
+        .status(500)
+        .json({ error: "Unable to find products " + err.message });
+    });
+};
 const updateProduct = async (req: Request, res: Response) => {
   const {
     name,
@@ -202,4 +216,5 @@ export default {
   addPicture,
   addPictures,
   getProductByName,
+  getProductGreaterThan,
 };
