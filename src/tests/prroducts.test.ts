@@ -630,7 +630,7 @@ describe("Find Product By Name Product Not Found ", () => {
   });
 });
 
-describe("Find Product By Price", () => {
+describe("Find Product By Price Lower Than", () => {
   test("should return 200 with a Products", async () => {
     const postUser = await supertest(app)
       .post(authApi + "/register")
@@ -668,5 +668,84 @@ describe("Find Product By Price", () => {
     expect(getProducts.body.products[0]).toEqual(
       expect.objectContaining(productsFixtures.productOutput)
     );
+  });
+});
+
+describe("Find Product By Price Lower Than With No Credentials", () => {
+  test("should return 401 with an error", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addProduct = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const getProducts = await supertest(app).get(
+      api + "/getByPriceLower/" + addProduct.body.product.price
+    );
+
+    expect(getProducts.status).toEqual(401);
+    expect(getProducts.type).toEqual("application/json");
+    // console.log("Products found: ", JSON.stringify(getProducts.body));
+    expect(getProducts.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
+
+describe("Find Product By Price Lower Than, Product Not Found", () => {
+  test("should return 200 with a empty list", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addProduct = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const getProducts = await supertest(app)
+      .get(api + "/getByPriceLower/" + "-1")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getProducts.status).toEqual(200);
+    expect(getProducts.type).toEqual("application/json");
+    // console.log("Products found: ", JSON.stringify(getProducts.body));
+    expect(getProducts.body.products).toEqual([]);
   });
 });

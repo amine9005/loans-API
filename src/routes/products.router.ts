@@ -26,6 +26,6 @@ router.get(
   verified,
   controller.getProductGreaterThan
 );
-router.get("getByPriceLower/:price", verified, controller.getProductLowerThan);
+router.get("/getByPriceLower/:price", verified, controller.getProductLowerThan);
 
 export default router;
