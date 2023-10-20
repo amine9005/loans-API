@@ -118,7 +118,7 @@ const getProductByName = async (req: Request, res: Response) => {
     });
 };
 
-const getProductGreaterThan = async (req: Request, res: Response) => {
+const getProductPriceGreaterThan = async (req: Request, res: Response) => {
   ProductModel.find({ price: { $gte: req.params.price } })
     .then((resp) => {
       console.log("found products successfully");
@@ -132,8 +132,22 @@ const getProductGreaterThan = async (req: Request, res: Response) => {
     });
 };
 
-const getProductLowerThan = async (req: Request, res: Response) => {
+const getProductPriceLowerThan = async (req: Request, res: Response) => {
   ProductModel.find({ price: { $lte: req.params.price } })
+    .then((resp) => {
+      console.log("found products successfully");
+      return res.status(200).json({ products: resp });
+    })
+    .catch((err) => {
+      console.log("err unable to find products: ", err.message);
+      return res
+        .status(500)
+        .json({ error: "Unable to find products " + err.message });
+    });
+};
+
+const getProductQuantityGreaterThan = async (req: Request, res: Response) => {
+  ProductModel.find({ quantity: { $gte: req.params.quantity } })
     .then((resp) => {
       console.log("found products successfully");
       return res.status(200).json({ products: resp });
@@ -231,6 +245,7 @@ export default {
   addPicture,
   addPictures,
   getProductByName,
-  getProductGreaterThan,
-  getProductLowerThan,
+  getProductPriceGreaterThan,
+  getProductPriceLowerThan,
+  getProductQuantityGreaterThan,
 };

@@ -24,8 +24,18 @@ router.get("/getByName/:name", verified, controller.getProductByName);
 router.get(
   "/getByPriceGreater/:price",
   verified,
-  controller.getProductGreaterThan
+  controller.getProductPriceGreaterThan
 );
-router.get("/getByPriceLower/:price", verified, controller.getProductLowerThan);
+router.get(
+  "/getByPriceLower/:price",
+  verified,
+  controller.getProductPriceLowerThan
+);
+
+router.get(
+  "/getByQuantityGreater/:quantity",
+  verified,
+  controller.getProductQuantityGreaterThan
+);
 
 export default router;
