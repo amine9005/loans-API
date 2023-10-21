@@ -38,4 +38,10 @@ router.get(
   controller.getProductQuantityGreaterThan
 );
 
+router.get(
+  "/getByQuantityLower/:quantity",
+  verified,
+  controller.getProductQuantityLowerThan
+);
+
 export default router;
