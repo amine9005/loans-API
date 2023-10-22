@@ -2,7 +2,7 @@ import rateLimiter from "express-rate-limit";
 
 const loginLimiter = rateLimiter({
   windowMs: 60 * 1000, // 1 minute
-  max: 25, // 10 attempts per window per 'window' for each IP address
+  max: 250, // 10 attempts per window per 'window' for each IP address
   message: {
     message: "too many login attempts, please try again after a minute",
   },

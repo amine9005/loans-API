@@ -160,6 +160,20 @@ const getProductQuantityGreaterThan = async (req: Request, res: Response) => {
     });
 };
 
+const getProductPriceEqual = async (req: Request, res: Response) => {
+  ProductModel.find({ price: { $eq: req.params.price } })
+    .then((resp) => {
+      console.log("found products successfully");
+      return res.status(200).json({ products: resp });
+    })
+    .catch((err) => {
+      console.log("err unable to find products: ", err.message);
+      return res
+        .status(500)
+        .json({ error: "Unable to find products " + err.message });
+    });
+};
+
 const getProductQuantityLowerThan = async (req: Request, res: Response) => {
   ProductModel.find({ quantity: { $lte: req.params.quantity } })
     .then((resp) => {
@@ -263,4 +277,5 @@ export default {
   getProductPriceLowerThan,
   getProductQuantityGreaterThan,
   getProductQuantityLowerThan,
+  getProductPriceEqual,
 };
