@@ -50,4 +50,10 @@ router.get(
   controller.getProductPriceLowerThan
 );
 
+router.get(
+  "/getByQuantityEqual/:quantity",
+  verified,
+  controller.getProductQuantityEqual
+);
+
 export default router;
