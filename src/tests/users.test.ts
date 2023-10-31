@@ -329,3 +329,32 @@ describe("Delete User by id with no credentials ", () => {
 //     );
 //   });
 // });
+
+describe("Get User by Name", () => {
+  test("should return 200 with a user", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const getUserByName = await supertest(app)
+      .get(api + "/names/" + postUser.body.user.name)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+    console.log("help: " + JSON.stringify(postUser.body));
+
+    expect(getUserByName.status).toEqual(200);
+    expect(getUserByName.type).toEqual("application/json");
+    expect(getUserByName.body.user).toEqual(
+      expect.objectContaining(usersFixtures.userOutput)
+    );
+  });
+});

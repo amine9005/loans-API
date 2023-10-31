@@ -34,6 +34,25 @@ const getUserByEmail = (req: Request, res: Response) => {
       return res.status(500).json({ error: err.message });
     });
 };
+
+const getUserByName = (req: Request, res: Response) => {
+  const { name } = req.params;
+  return userModel
+    .findOne({ name })
+    .then((user) => {
+      if (user) {
+        console.log("User Found successfully");
+        return res.status(200).json({ user });
+      }
+      console.log("User Not Found ");
+
+      return res.status(404).json({ error: "User Not Found " });
+    })
+    .catch((err) => {
+      console.error("Unable to find user: " + err.message);
+      return res.status(500).json({ error: err.message });
+    });
+};
 const updateUser = (req: Request, res: Response) => {
   //Update by id
 
@@ -115,4 +134,5 @@ export default {
   updateUser,
   deleteUser,
   getAllUsers,
+  getUserByName,
 };
