@@ -9,5 +9,10 @@ router.get("/", verified, controller.getAllOrders);
 router.put("/update/:id", verified, controller.updateOrder);
 router.delete("/delete/:id", verified, controller.deleteOrder);
 router.get("/:id", verified, controller.getOrderById);
+router.get(
+  "/getByTotalPriceEqual/:totalPrice",
+  verified,
+  controller.getOrderByTotalPriceEqual
+);
 
 export default router;

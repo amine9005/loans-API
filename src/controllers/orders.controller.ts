@@ -127,6 +127,21 @@ const deleteOrder = (req: Request, res: Response) => {
     });
 };
 
+const getOrderByTotalPriceEqual = (req: Request, res: Response) => {
+  ordersModel
+    .find({ totalPrice: { $eq: req.params.totalPrice } })
+    .then((resp) => {
+      console.log("oder found successfully");
+      return res.status(200).json(resp);
+    })
+    .catch((err) => {
+      console.log("unable to get order by total price: " + err.message);
+      return res
+        .status(500)
+        .json({ error: "unable to get order by total price: " + err.message });
+    });
+};
+
 const getOrderById = (req: Request, res: Response) => {
   ordersModel
     .find({ _id: req.params.id })
@@ -145,4 +160,5 @@ export default {
   updateOrder,
   deleteOrder,
   getOrderById,
+  getOrderByTotalPriceEqual,
 };
