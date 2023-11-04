@@ -130,9 +130,9 @@ const deleteOrder = (req: Request, res: Response) => {
 const getOrderByTotalPriceEqual = (req: Request, res: Response) => {
   ordersModel
     .find({ totalPrice: { $eq: req.params.totalPrice } })
-    .then((resp) => {
+    .then((order) => {
       console.log("oder found successfully");
-      return res.status(200).json(resp);
+      return res.status(200).json(order);
     })
     .catch((err) => {
       console.log("unable to get order by total price: " + err.message);
