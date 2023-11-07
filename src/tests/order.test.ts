@@ -736,7 +736,7 @@ describe("Get Order By Total Price Greater than, order doesn't exist", () => {
     );
 
     const getOrder = await supertest(app)
-      .get(api + "/getByTotalPriceGreater/" + "-1")
+      .get(api + "/getByTotalPriceGreater/" + "9999999")
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 

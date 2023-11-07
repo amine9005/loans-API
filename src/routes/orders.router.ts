@@ -14,6 +14,7 @@ router.get(
   verified,
   controller.getOrderByTotalPriceEqual
 );
+
 router.get(
   "/getByTotalPriceGreater/:totalPrice",
   verified,

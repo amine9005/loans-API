@@ -169,6 +169,7 @@ const getOrderById = (req: Request, res: Response) => {
         .json({ error: "Unable to find order: " + err.message });
     });
 };
+
 export default {
   addOrder,
   getAllOrders,
