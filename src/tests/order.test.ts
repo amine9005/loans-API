@@ -504,7 +504,7 @@ describe("Get Order By Id Order doesn't exist", () => {
   });
 });
 
-describe("Get Order By Total Price", () => {
+describe("Get Order By Total Price Equal", () => {
   test("should return 200 with an order", async () => {
     const postUser = await supertest(app)
       .post(authApi + "/register")
@@ -545,7 +545,7 @@ describe("Get Order By Total Price", () => {
   });
 });
 
-describe("Get Order By Total Price without Authorization", () => {
+describe("Get Order By Total Price Equal without Authorization", () => {
   test("should return 401 with an error", async () => {
     const postUser = await supertest(app)
       .post(authApi + "/register")
@@ -587,7 +587,7 @@ describe("Get Order By Total Price without Authorization", () => {
   });
 });
 
-describe("Get Order By Total Price order doesn't exist", () => {
+describe("Get Order By Total Price Equal order doesn't exist", () => {
   test("should return 200 with an empty list", async () => {
     const postUser = await supertest(app)
       .post(authApi + "/register")
@@ -616,6 +616,127 @@ describe("Get Order By Total Price order doesn't exist", () => {
 
     const getOrder = await supertest(app)
       .get(api + "/getByTotalPriceEqual/" + "-1")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOrder.status).toEqual(200);
+    expect(getOrder.type).toEqual("application/json");
+    expect(getOrder.body).toEqual([]);
+  });
+});
+
+describe("Get Order By Total Price Greater Than", () => {
+  test("should return 200 with an order", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(orderFixtures.orderInput);
+
+    expect(addOrder.status).toEqual(200);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body.order).toEqual(
+      expect.objectContaining(orderFixtures.orderOutput)
+    );
+    const { totalPrice } = addOrder.body.order;
+
+    const getOrder = await supertest(app)
+      .get(api + "/getByTotalPriceGreater/" + totalPrice)
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOrder.status).toEqual(200);
+    expect(getOrder.type).toEqual("application/json");
+    expect(getOrder.body).toEqual([
+      expect.objectContaining(orderFixtures.orderOutput),
+    ]);
+  });
+});
+
+describe("Get Order By Total Price Greater, without Authorization", () => {
+  test("should return 401 with an error", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(orderFixtures.orderInput);
+
+    expect(addOrder.status).toEqual(200);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body.order).toEqual(
+      expect.objectContaining(orderFixtures.orderOutput)
+    );
+    const { totalPrice } = addOrder.body.order;
+
+    const getOrder = await supertest(app).get(
+      api + "/getByTotalPriceGreater/" + totalPrice
+    );
+    // .set("Cookie", [...header["set-cookie"]])
+    // .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOrder.status).toEqual(401);
+    expect(getOrder.type).toEqual("application/json");
+    expect(getOrder.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
+});
+
+describe("Get Order By Total Price Greater than, order doesn't exist", () => {
+  test("should return 200 with an empty list", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const addOrder = await supertest(app)
+      .post(api + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(orderFixtures.orderInput);
+
+    expect(addOrder.status).toEqual(200);
+    expect(addOrder.type).toEqual("application/json");
+    expect(addOrder.body.order).toEqual(
+      expect.objectContaining(orderFixtures.orderOutput)
+    );
+
+    const getOrder = await supertest(app)
+      .get(api + "/getByTotalPriceGreater/" + "-1")
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 

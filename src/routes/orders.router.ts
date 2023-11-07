@@ -14,5 +14,10 @@ router.get(
   verified,
   controller.getOrderByTotalPriceEqual
 );
+router.get(
+  "/getByTotalPriceGreater/:totalPrice",
+  verified,
+  controller.getOrderByTotalPriceGreater
+);
 
 export default router;
