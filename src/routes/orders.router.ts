@@ -21,4 +21,9 @@ router.get(
   controller.getOrderByTotalPriceGreater
 );
 
+router.get(
+  "/getByTotalPriceLower/:totalPrice",
+  verified,
+  controller.getOrderByTotalPriceLower
+);
 export default router;
