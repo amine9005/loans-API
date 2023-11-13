@@ -172,6 +172,21 @@ const getOrderByTotalPriceLower = (req: Request, res: Response) => {
     });
 };
 
+const getOrderByAddress = (req: Request, res: Response) => {
+  ordersModel
+    .find({ Address: { $lte: req.params.address } })
+    .then((order) => {
+      console.log("oder found successfully");
+      return res.status(200).json(order);
+    })
+    .catch((err) => {
+      console.log("unable to get order by Address: " + err.message);
+      return res
+        .status(500)
+        .json({ error: "unable to get order by Address: " + err.message });
+    });
+};
+
 const getOrderById = (req: Request, res: Response) => {
   ordersModel
     .find({ _id: req.params.id })
@@ -194,4 +209,5 @@ export default {
   getOrderByTotalPriceEqual,
   getOrderByTotalPriceGreater,
   getOrderByTotalPriceLower,
+  getOrderByAddress,
 };

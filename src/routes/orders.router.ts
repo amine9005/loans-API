@@ -26,4 +26,6 @@ router.get(
   verified,
   controller.getOrderByTotalPriceLower
 );
+
+router.get("/getByAddress/:address", verified, controller.getOrderByAddress);
 export default router;
