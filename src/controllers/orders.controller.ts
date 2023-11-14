@@ -174,7 +174,7 @@ const getOrderByTotalPriceLower = (req: Request, res: Response) => {
 
 const getOrderByAddress = (req: Request, res: Response) => {
   ordersModel
-    .find({ Address: { $lte: req.params.address } })
+    .find({ shippingAddress: { $eq: req.params.address } })
     .then((order) => {
       console.log("oder found successfully");
       return res.status(200).json(order);
