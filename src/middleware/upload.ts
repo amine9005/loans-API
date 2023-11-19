@@ -12,7 +12,7 @@ const storage = multer.diskStorage({
     file: Express.Multer.File,
     cb: DestinationCallback
   ) {
-    const dir = "./uploads/";
+    const dir = "./dist/uploads/";
     mkdirp(dir).then(() => {
       cb(null, dir);
     });

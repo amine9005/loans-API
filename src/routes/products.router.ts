@@ -56,4 +56,10 @@ router.get(
   controller.getProductQuantityEqual
 );
 
+router.get(
+  "/getImage/:name",
+  // verified,
+  controller.getProductImage
+);
+
 export default router;

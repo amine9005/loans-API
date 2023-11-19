@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
 import { ObjectId } from "mongodb";
+import * as path from "path";
 
 const addProduct = async (req: Request, res: Response) => {
   const {
@@ -256,13 +257,33 @@ const updateProduct = async (req: Request, res: Response) => {
 };
 
 const addPicture = async (req: Request, res: Response) => {
-  // console.log("adding Thumbnail");
+  console.log("adding Thumbnail");
   if (req.file) {
     const path = await req.file.path;
     // console.log("path: ", path);
     return res.status(200).json({ path });
   }
   return res.status(500).json({ error: "Unable to upload thumbnail" });
+};
+
+const getProductImage = async (req: Request, res: Response) => {
+  try {
+    const filePath = await path.join(
+      __dirname,
+      "..",
+      "uploads",
+      req.params.name
+    );
+    console.log("product image found successfully: ");
+
+    return res.status(200).contentType("image/jpeg").sendFile(filePath);
+  } catch (err) {
+    console.log("Unable to find products image " + err.message, "dirname ");
+
+    return res
+      .status(500)
+      .json({ error: "Unable to find products image " + err.message });
+  }
 };
 
 const addPictures = async (req: Request, res: Response) => {
@@ -293,4 +314,5 @@ export default {
   getProductQuantityLowerThan,
   getProductPriceEqual,
   getProductQuantityEqual,
+  getProductImage,
 };

@@ -18,7 +18,6 @@ function createServer() {
   app.use(express.json());
   app.use(cors(corsOptions));
   app.use(cookieParser());
-
   app.use(config.api.url, indexRouter);
   app.use(config.api.url + "/users", usersRouter);
   app.use(config.api.url + "/auth", authRouter);
