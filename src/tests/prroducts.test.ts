@@ -1229,3 +1229,122 @@ describe("Find Product By Quantity Equal To X, Product Not Found", () => {
     expect(getProducts.body.products).toEqual([]);
   });
 });
+
+// describe("Get Product Image", () => {
+//   test("should return 200 with an image", async () => {
+//     const postUser = await supertest(app)
+//       .post(authApi + "/register")
+//       .send(usersFixtures.userInput);
+//     expect(postUser.status).toEqual(200);
+//     const getUser = await supertest(app)
+//       .post(authApi + "/login")
+//       .send(usersFixtures.userLogin);
+//     expect(getUser.status).toEqual(200);
+//     expect(getUser.type).toEqual("application/json");
+//     expect(getUser.body).toEqual(
+//       expect.objectContaining(usersFixtures.accessToken)
+//     );
+//     const { header } = getUser;
+//     const addProduct = await supertest(app)
+//       .post(api + "/add")
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+//       .send(productsFixtures.productInput);
+
+//     expect(addProduct.status).toEqual(200);
+//     expect(addProduct.type).toEqual("application/json");
+//     expect(addProduct.body.product).toEqual(
+//       expect.objectContaining(productsFixtures.productOutput)
+//     );
+
+//     const route = api + "/getImage/" + "1700371665206.png";
+//     console.log("image route: ", route);
+//     const getProducts = await supertest(app)
+//       .get(api + "/getImage/" + "1700371665206.png")
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+//     expect(getProducts.status).toEqual(200);
+//     expect(getProducts.type).toEqual("image/jpeg");
+//   });
+// });
+
+// describe("Get Product Image, With No Credentials", () => {
+//   test("should return 401 with an error", async () => {
+//     const postUser = await supertest(app)
+//       .post(authApi + "/register")
+//       .send(usersFixtures.userInput);
+//     expect(postUser.status).toEqual(200);
+//     const getUser = await supertest(app)
+//       .post(authApi + "/login")
+//       .send(usersFixtures.userLogin);
+//     expect(getUser.status).toEqual(200);
+//     expect(getUser.type).toEqual("application/json");
+//     expect(getUser.body).toEqual(
+//       expect.objectContaining(usersFixtures.accessToken)
+//     );
+//     const { header } = getUser;
+//     const addProduct = await supertest(app)
+//       .post(api + "/add")
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+//       .send(productsFixtures.productInput);
+
+//     expect(addProduct.status).toEqual(200);
+//     expect(addProduct.type).toEqual("application/json");
+//     expect(addProduct.body.product).toEqual(
+//       expect.objectContaining(productsFixtures.productOutput)
+//     );
+
+//     const getProducts = await supertest(app).get(
+//       api + "/getImage/" + "1700371665206.png"
+//     );
+
+//     expect(getProducts.status).toEqual(401);
+//     expect(getProducts.type).toEqual("application/json");
+//     // console.log("Products found: ", JSON.stringify(getProducts.body));
+//     expect(getProducts.body).toEqual(
+//       expect.objectContaining(usersFixtures.errorObject)
+//     );
+//   });
+// });
+
+// describe("Get Product Image, Image Doesn't exist", () => {
+//   test("should return 404 with an error", async () => {
+//     const postUser = await supertest(app)
+//       .post(authApi + "/register")
+//       .send(usersFixtures.userInput);
+//     expect(postUser.status).toEqual(200);
+//     const getUser = await supertest(app)
+//       .post(authApi + "/login")
+//       .send(usersFixtures.userLogin);
+//     expect(getUser.status).toEqual(200);
+//     expect(getUser.type).toEqual("application/json");
+//     expect(getUser.body).toEqual(
+//       expect.objectContaining(usersFixtures.accessToken)
+//     );
+//     const { header } = getUser;
+//     const addProduct = await supertest(app)
+//       .post(api + "/add")
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+//       .send(productsFixtures.productInput);
+
+//     expect(addProduct.status).toEqual(200);
+//     expect(addProduct.type).toEqual("application/json");
+//     expect(addProduct.body.product).toEqual(
+//       expect.objectContaining(productsFixtures.productOutput)
+//     );
+
+//     const route = api + "/getImage/" + "000000.png";
+//     console.log("image route: ", route);
+//     const getProducts = await supertest(app)
+//       .get(api + "/getImage/" + "000000.png")
+//       .set("Cookie", [...header["set-cookie"]])
+//       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+//     expect(getProducts.status).toEqual(404);
+//     expect(getProducts.type).toEqual("content/json");
+//     expect(getProducts.body).toContain(usersFixtures.errorObject);
+//   });
+// });

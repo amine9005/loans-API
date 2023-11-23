@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
 import { ObjectId } from "mongodb";
 import * as path from "path";
+import fs from "fs";
 
 const addProduct = async (req: Request, res: Response) => {
   const {
@@ -274,9 +275,11 @@ const getProductImage = async (req: Request, res: Response) => {
       "uploads",
       req.params.name
     );
+    const img = fs.readFileSync(filePath);
+    const base64 = Buffer.from(img).toString("base64");
     console.log("product image found successfully: ");
 
-    return res.status(200).contentType("image/jpeg").sendFile(filePath);
+    return res.status(200).json(base64);
   } catch (err) {
     console.log("Unable to find products image " + err.message, "dirname ");
 

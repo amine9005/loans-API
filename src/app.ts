@@ -8,7 +8,6 @@ import authRouter from "./routes/auth.router";
 import usersRouter from "./routes/users.router";
 import productsRouter from "./routes/products.router";
 import orderRouter from "./routes/orders.router";
-
 import cookieParser from "cookie-parser";
 
 function createServer() {
