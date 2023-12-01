@@ -227,6 +227,16 @@ const updateProduct = async (req: Request, res: Response) => {
     !description ||
     featured == undefined
   ) {
+    console.log("product body: " + JSON.stringify(req.body));
+    console.log("name: " + JSON.stringify(name));
+    console.log("thumbnail: " + JSON.stringify(thumbnail));
+    console.log("pictures: " + JSON.stringify(pictures));
+    console.log("slag: " + JSON.stringify(slag));
+    console.log("price: " + JSON.stringify(price));
+    console.log("short_description: " + JSON.stringify(short_description));
+    console.log("description: " + JSON.stringify(description));
+    console.log("featured: " + JSON.stringify(featured));
+    console.log("quantity: " + JSON.stringify(quantity));
     return res.status(400).json({ error: "all fields are required" });
   }
   ProductModel.updateOne(
