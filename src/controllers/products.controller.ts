@@ -4,6 +4,13 @@ import { ObjectId } from "mongodb";
 import * as path from "path";
 import fs from "fs";
 
+/**
+ * Creates a new product in an Express.js server.
+ *
+ * @param req - The request object containing the product data in the request body.
+ * @param res - The response object used to send the response back to the client.
+ * @returns If all the required fields are present and the product is successfully created, the function returns a 200 response with the created product. If any of the required fields are missing, the function returns a 400 error response with a message indicating that all fields are required. If there is an error while saving the product, the function returns a 500 error response with a message indicating that the product could not be created.
+ */
 const addProduct = async (req: Request, res: Response) => {
   const {
     name,
