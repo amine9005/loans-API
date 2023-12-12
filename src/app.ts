@@ -8,6 +8,7 @@ import authRouter from "./routes/auth.router";
 import usersRouter from "./routes/users.router";
 import productsRouter from "./routes/products.router";
 import orderRouter from "./routes/orders.router";
+import dashboardRouter from "./routes/dashboard.router";
 import cookieParser from "cookie-parser";
 
 function createServer() {
@@ -22,6 +23,7 @@ function createServer() {
   app.use(config.api.url + "/auth", authRouter);
   app.use(config.api.url + "/products", productsRouter);
   app.use(config.api.url + "/orders", orderRouter);
+  app.use(config.api.url + "/dashboard", dashboardRouter);
 
   app.use("*", (req, res) => {
     res.status(404).json({
