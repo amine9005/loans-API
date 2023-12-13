@@ -1,0 +1,76 @@
+import createServer from "../app";
+import supertest from "supertest";
+import { config } from "../config/config";
+import usersFixtures from "./fixtures/users.fixtures";
+import productsFixtures from "./fixtures/products.fixtures";
+
+import {
+  connectToMemoryDB,
+  disconnectFromMemoryDB,
+  __DANGER__dropDataBase,
+} from "../config/connectToTestDB";
+
+const api = config.api.url + "/dashboard";
+const prodApi = config.api.url + "/products";
+const authApi = config.api.url + "/auth";
+
+const app = createServer();
+beforeAll(async () => {
+  await connectToMemoryDB();
+});
+
+afterEach(async () => {
+  await __DANGER__dropDataBase();
+});
+
+afterAll(async () => {
+  await disconnectFromMemoryDB();
+});
+// Returns the size of the inventory as a JSON response with a 200 status code when products are found.
+
+describe("Inventory size", () => {
+  test("should return the size of the inventory as a JSON response with a 200 status code when products are found", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const getInventorySize = await supertest(app)
+      .get(api + "/inventorySize")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getInventorySize.status).toEqual(200);
+    expect(getInventorySize.type).toEqual("application/json");
+    expect(getInventorySize.body.products).toEqual(0);
+
+    const addProduct = await supertest(app)
+      .post(prodApi + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const getInventorySize2 = await supertest(app)
+      .get(api + "/inventorySize")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getInventorySize2.status).toEqual(200);
+    expect(getInventorySize2.type).toEqual("application/json");
+    expect(getInventorySize2.body.products).toEqual(1);
+  });
+});
