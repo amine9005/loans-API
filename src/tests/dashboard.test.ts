@@ -108,7 +108,7 @@ describe("total orders", () => {
 
     expect(addOrder.status).toEqual(200);
     expect(addOrder.type).toEqual("application/json");
-    expect(addOrder.body.product).toEqual(
+    expect(addOrder.body.order).toEqual(
       expect.objectContaining(ordersFixtures.orderOutput)
     );
 
