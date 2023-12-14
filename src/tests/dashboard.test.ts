@@ -98,7 +98,7 @@ describe("total orders", () => {
 
     expect(getOrdersCount.status).toEqual(200);
     expect(getOrdersCount.type).toEqual("application/json");
-    expect(getOrdersCount.body.products).toEqual(0);
+    expect(getOrdersCount.body.orders).toEqual(0);
 
     const addOrder = await supertest(app)
       .post(orderApi + "/add")
@@ -113,12 +113,12 @@ describe("total orders", () => {
     );
 
     const getOrdersCount2 = await supertest(app)
-      .get(api + "/inventorySize")
+      .get(api + "/orderSize")
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
     expect(getOrdersCount2.status).toEqual(200);
     expect(getOrdersCount2.type).toEqual("application/json");
-    expect(getOrdersCount2.body.products).toEqual(1);
+    expect(getOrdersCount2.body.orders).toEqual(1);
   });
 });
