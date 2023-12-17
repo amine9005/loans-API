@@ -5,6 +5,6 @@ import controller from "../controllers/dashboard.controller";
 const router = express.Router();
 
 router.get("/inventorySize", verified, controller.getInventorySize);
-router.get("/orderSize", verified, controller.getOrdersSize);
+router.get("/ordersCount", verified, controller.getOrdersSize);
 
 export default router;

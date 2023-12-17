@@ -113,7 +113,7 @@ describe("total orders", () => {
     );
 
     const getOrdersCount2 = await supertest(app)
-      .get(api + "/orderSize")
+      .get(api + "/ordersCount")
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
