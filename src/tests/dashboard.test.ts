@@ -54,7 +54,7 @@ describe("Inventory size", () => {
     expect(getInventorySize.body.products).toEqual(0);
 
     const addProduct = await supertest(app)
-      .post(orderApi + "/add")
+      .post(prodApi + "/add")
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`)
       .send(productsFixtures.productInput);
@@ -92,7 +92,7 @@ describe("total orders", () => {
     );
     const { header } = getUser;
     const getOrdersCount = await supertest(app)
-      .get(api + "/orderSize")
+      .get(api + "/ordersCount")
       .set("Cookie", [...header["set-cookie"]])
       .set("Authorization", `Bearer ${getUser.body.accessToken}`);
 
