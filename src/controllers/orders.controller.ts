@@ -7,20 +7,20 @@ const addOrder = (req: Request, res: Response) => {
     orderItems,
     shippingAddress,
     paymentMethod,
-    itemsPrice,
+    // itemsPrice,
     shippingPrice,
     totalPrice,
   } = req.body;
 
   if (
-    itemsPrice == undefined ||
+    // itemsPrice == undefined ||
     totalPrice == undefined ||
     orderItems == undefined ||
     shippingAddress == undefined ||
     paymentMethod == undefined ||
     shippingPrice == undefined
   ) {
-    console.log("itemsPrice", itemsPrice);
+    // console.log("itemsPrice", itemsPrice);
     console.log("totalPrice", totalPrice);
     console.log("orderItems", orderItems);
     console.log("shippingAddress", shippingAddress);
@@ -32,7 +32,7 @@ const addOrder = (req: Request, res: Response) => {
   }
 
   new ordersModel({
-    itemsPrice: itemsPrice,
+    // itemsPrice: itemsPrice,
     totalPrice: totalPrice,
     orderItems: orderItems,
     shippingAddress: shippingAddress,
@@ -68,20 +68,20 @@ const updateOrder = (req: Request, res: Response) => {
     orderItems,
     shippingAddress,
     paymentMethod,
-    itemsPrice,
+    // itemsPrice,
     shippingPrice,
     totalPrice,
   } = req.body;
 
   if (
-    itemsPrice == undefined ||
+    // itemsPrice == undefined ||
     totalPrice == undefined ||
     orderItems == undefined ||
     shippingAddress == undefined ||
     paymentMethod == undefined ||
     shippingPrice == undefined
   ) {
-    console.log("itemsPrice", itemsPrice);
+    // console.log("itemsPrice", itemsPrice);
     console.log("totalPrice", totalPrice);
     console.log("orderItems", orderItems);
     console.log("shippingAddress", shippingAddress);
@@ -99,7 +99,7 @@ const updateOrder = (req: Request, res: Response) => {
         orderItems,
         shippingAddress,
         paymentMethod,
-        itemsPrice,
+        // itemsPrice,
         shippingPrice,
         totalPrice,
       }
