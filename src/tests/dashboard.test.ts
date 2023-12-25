@@ -121,4 +121,17 @@ describe("total orders", () => {
     expect(getOrdersCount2.type).toEqual("application/json");
     expect(getOrdersCount2.body.orders).toEqual(1);
   });
+
+  test("should return error 400", async () => {
+    // const { header } = getUser;
+    const getOrdersCount = await supertest(app).get(api + "/ordersCount");
+    // .set("Cookie", [...header["set-cookie"]])
+    // .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOrdersCount.status).toEqual(401);
+    expect(getOrdersCount.type).toEqual("application/json");
+    expect(getOrdersCount.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
 });
