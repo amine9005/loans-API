@@ -74,6 +74,19 @@ describe("Inventory size", () => {
     expect(getInventorySize2.type).toEqual("application/json");
     expect(getInventorySize2.body.products).toEqual(1);
   });
+
+  test("should return error 400", async () => {
+    // const { header } = getUser;
+    const getOrdersCount = await supertest(app).get(api + "/inventorySize");
+    // .set("Cookie", [...header["set-cookie"]])
+    // .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOrdersCount.status).toEqual(401);
+    expect(getOrdersCount.type).toEqual("application/json");
+    expect(getOrdersCount.body).toEqual(
+      expect.objectContaining(usersFixtures.errorObject)
+    );
+  });
 });
 
 describe("total orders", () => {
