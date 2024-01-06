@@ -9,6 +9,7 @@ const addOrder = (req: Request, res: Response) => {
     paymentMethod,
     // itemsPrice,
     shippingPrice,
+    dateCreated,
     totalPrice,
   } = req.body;
 
@@ -18,7 +19,8 @@ const addOrder = (req: Request, res: Response) => {
     orderItems == undefined ||
     shippingAddress == undefined ||
     paymentMethod == undefined ||
-    shippingPrice == undefined
+    shippingPrice == undefined ||
+    dateCreated == undefined
   ) {
     // console.log("itemsPrice", itemsPrice);
     console.log("totalPrice", totalPrice);
@@ -38,6 +40,7 @@ const addOrder = (req: Request, res: Response) => {
     shippingAddress: shippingAddress,
     paymentMethod: paymentMethod,
     shippingPrice: shippingPrice,
+    dateCreated: dateCreated,
   })
     .save()
     .then((order) => {
@@ -69,6 +72,7 @@ const updateOrder = (req: Request, res: Response) => {
     shippingAddress,
     paymentMethod,
     // itemsPrice,
+    dateCreated,
     shippingPrice,
     totalPrice,
   } = req.body;
@@ -79,7 +83,8 @@ const updateOrder = (req: Request, res: Response) => {
     orderItems == undefined ||
     shippingAddress == undefined ||
     paymentMethod == undefined ||
-    shippingPrice == undefined
+    shippingPrice == undefined ||
+    dateCreated == undefined
   ) {
     // console.log("itemsPrice", itemsPrice);
     console.log("totalPrice", totalPrice);
@@ -100,6 +105,7 @@ const updateOrder = (req: Request, res: Response) => {
         shippingAddress,
         paymentMethod,
         // itemsPrice,
+        dateCreated,
         shippingPrice,
         totalPrice,
       }

@@ -5,6 +5,7 @@ export interface IOrder {
   shippingAddress: string;
   paymentMethod: string;
   // itemsPrice: Array<number>;
+  dateCreated: Date;
   shippingPrice: number;
   totalPrice: number;
 }
@@ -16,6 +17,7 @@ const OrderSchema = new Schema({
   shippingAddress: { type: String, required: true },
   paymentMethod: { type: String, required: true },
   // itemsPrice: { type: Array<number>, required: true },
+  dateCreated: { type: Date, required: true },
   shippingPrice: { type: Number, required: true },
   totalPrice: { type: Number, required: true },
 });

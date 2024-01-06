@@ -1,8 +1,10 @@
+const dateCreated = new Date();
 const orderInput = {
   orderItems: ["llkdfg", "olfkkgn"],
   shippingAddress: "shippingAddress",
   paymentMethod: "payment",
   // itemsPrice: [300, 150],
+  dateCreated: dateCreated,
   shippingPrice: 50,
   totalPrice: 500,
 };
@@ -12,6 +14,7 @@ const orderUpdate = {
   shippingAddress: "Address",
   paymentMethod: "payment2",
   // itemsPrice: [350, 250],
+  dateCreated: dateCreated,
   shippingPrice: 100,
   totalPrice: 750,
 };
@@ -23,6 +26,7 @@ const orderOutput = {
   shippingAddress: expect.any(String),
   paymentMethod: expect.any(String),
   // itemsPrice: expect.any(Array<number>),
+  dateCreated: expect.any(String),
   shippingPrice: expect.any(Number),
   totalPrice: expect.any(Number),
 };
