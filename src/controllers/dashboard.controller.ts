@@ -45,6 +45,29 @@ const getOrdersSize = async (req: Request, res: Response) => {
     });
 };
 
+const getSalesData = async (req: Request, res: Response) => {
+  const { filter } = req.params;
+
+  if (filter === "today") {
+    ordersModel
+      .find({ dateCreated: { $eq: filter } })
+      .then((orders) => {
+        console.log("Orders found");
+        return res.status(200).json({ orders: orders.length });
+      })
+      .catch((err) => {
+        console.log("Unable to find orders " + err.message);
+        return res
+          .status(500)
+          .json({ error: "Unable to find orders " + err.message });
+      });
+  }
+
+  return res
+    .status(500)
+    .json({ error: "Unable to find orders Unknown Filter" });
+};
+
 export default {
   getInventorySize,
   getOrdersSize,
