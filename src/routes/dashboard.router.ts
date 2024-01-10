@@ -6,5 +6,6 @@ const router = express.Router();
 
 router.get("/inventorySize", verified, controller.getInventorySize);
 router.get("/ordersCount", verified, controller.getOrdersSize);
+router.get("/salesData/:filter", verified, controller.getSalesData);
 
 export default router;

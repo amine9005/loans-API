@@ -8,6 +8,7 @@ const addOrder = (req: Request, res: Response) => {
     shippingAddress,
     paymentMethod,
     // itemsPrice,
+    status,
     shippingPrice,
     dateCreated,
     totalPrice,
@@ -20,7 +21,8 @@ const addOrder = (req: Request, res: Response) => {
     shippingAddress == undefined ||
     paymentMethod == undefined ||
     shippingPrice == undefined ||
-    dateCreated == undefined
+    dateCreated == undefined ||
+    status == undefined
   ) {
     // console.log("itemsPrice", itemsPrice);
     console.log("totalPrice", totalPrice);
@@ -28,6 +30,7 @@ const addOrder = (req: Request, res: Response) => {
     console.log("shippingAddress", shippingAddress);
     console.log("paymentMethod", paymentMethod);
     console.log("shippingPrice", shippingPrice);
+    console.log("status: ", status);
 
     console.log("all fields are required");
     return res.status(400).json({ error: "All fields are required" });
@@ -41,6 +44,7 @@ const addOrder = (req: Request, res: Response) => {
     paymentMethod: paymentMethod,
     shippingPrice: shippingPrice,
     dateCreated: dateCreated,
+    status: status,
   })
     .save()
     .then((order) => {
@@ -72,6 +76,7 @@ const updateOrder = (req: Request, res: Response) => {
     shippingAddress,
     paymentMethod,
     // itemsPrice,
+    status,
     dateCreated,
     shippingPrice,
     totalPrice,
@@ -84,7 +89,8 @@ const updateOrder = (req: Request, res: Response) => {
     shippingAddress == undefined ||
     paymentMethod == undefined ||
     shippingPrice == undefined ||
-    dateCreated == undefined
+    dateCreated == undefined ||
+    status == undefined
   ) {
     // console.log("itemsPrice", itemsPrice);
     console.log("totalPrice", totalPrice);
@@ -92,6 +98,7 @@ const updateOrder = (req: Request, res: Response) => {
     console.log("shippingAddress", shippingAddress);
     console.log("paymentMethod", paymentMethod);
     console.log("shippingPrice", shippingPrice);
+    console.log("status: ", status);
 
     console.log("all fields are required");
     return res.status(400).json({ error: "All fields are required" });
@@ -105,6 +112,7 @@ const updateOrder = (req: Request, res: Response) => {
         shippingAddress,
         paymentMethod,
         // itemsPrice,
+        status,
         dateCreated,
         shippingPrice,
         totalPrice,
