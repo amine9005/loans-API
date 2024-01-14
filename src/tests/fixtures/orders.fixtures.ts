@@ -17,7 +17,6 @@ const orderUpdate = {
   // itemsPrice: [350, 250],
   dateCreated: dateCreated,
   status: "pending",
-
   shippingPrice: 100,
   totalPrice: 750,
 };

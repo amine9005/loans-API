@@ -48,25 +48,35 @@ const getOrdersSize = async (req: Request, res: Response) => {
 const getSalesData = async (req: Request, res: Response) => {
   const { filter } = req.params;
 
-  if (filter === "Today") {
-    const date = new Date();
-    ordersModel
-      .find({ dateCreated: { $eq: filter } })
-      .then((orders) => {
-        console.log("Orders found");
-        return res.status(200).json({ orders: orders });
-      })
-      .catch((err) => {
-        console.log("Unable to find orders " + err.message);
-        return res
-          .status(500)
-          .json({ error: "Unable to find orders " + err.message });
-      });
+  try {
+    if (filter === "Today") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      // console.log("date: ", targetDate);
+      // console.log("target day: ", targetDate.getDate());
+      // console.log("target time: ", targetDate.getHours());
+      await ordersModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Unable to find orders Unknown Filter: ", err });
   }
-
-  return res
-    .status(500)
-    .json({ error: "Unable to find orders Unknown Filter" });
 };
 
 export default {
