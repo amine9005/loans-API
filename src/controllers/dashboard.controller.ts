@@ -71,6 +71,44 @@ const getSalesData = async (req: Request, res: Response) => {
             .status(404)
             .json({ error: "Unable to find orders " + err.message });
         });
+    } else if (filter === "3Days") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - 3
+      );
+      await ordersModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
+    } else if (filter === "ThisWeek") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - 7
+      );
+      await ordersModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
     }
   } catch (err) {
     return res
