@@ -109,6 +109,59 @@ const getSalesData = async (req: Request, res: Response) => {
             .status(404)
             .json({ error: "Unable to find orders " + err.message });
         });
+    } else if (filter === "YTD") {
+      const currentDate = new Date();
+      const targetDate = new Date(currentDate.getFullYear(), 1, 1);
+      await ordersModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
+    } else if (filter === "1Y") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear() - 1,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      await ordersModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
+    } else if (filter === "3Y") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear() - 3,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      await ordersModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
     }
   } catch (err) {
     return res
