@@ -49,12 +49,12 @@ const getSalesData = async (req: Request, res: Response) => {
   const { filter } = req.params;
 
   try {
-    if (filter === "Today") {
+    if (filter === "1W") {
       const currentDate = new Date();
       const targetDate = new Date(
         currentDate.getFullYear(),
         currentDate.getMonth(),
-        currentDate.getDate()
+        currentDate.getDate() - 7
       );
       // console.log("date: ", targetDate);
       // console.log("target day: ", targetDate.getDate());
@@ -71,31 +71,12 @@ const getSalesData = async (req: Request, res: Response) => {
             .status(404)
             .json({ error: "Unable to find orders " + err.message });
         });
-    } else if (filter === "3Days") {
+    } else if (filter === "1M") {
       const currentDate = new Date();
       const targetDate = new Date(
         currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() - 3
-      );
-      await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
-        .then((orders) => {
-          console.log("Orders found");
-          return res.status(200).json({ orders: orders });
-        })
-        .catch((err) => {
-          console.log("Unable to find orders " + err.message);
-          return res
-            .status(404)
-            .json({ error: "Unable to find orders " + err.message });
-        });
-    } else if (filter === "ThisWeek") {
-      const currentDate = new Date();
-      const targetDate = new Date(
-        currentDate.getFullYear(),
-        currentDate.getMonth(),
-        currentDate.getDate() - 7
+        currentDate.getMonth() - 1,
+        currentDate.getDate()
       );
       await ordersModel
         .find({ dateCreated: { $gte: targetDate } })
