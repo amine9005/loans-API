@@ -92,7 +92,7 @@ const getSalesData = async (req: Request, res: Response) => {
         });
     } else if (filter === "YTD") {
       const currentDate = new Date();
-      const targetDate = new Date(currentDate.getFullYear(), 1, 1);
+      const targetDate = new Date(currentDate.getFullYear(), 0, 0);
       await ordersModel
         .find({ dateCreated: { $gte: targetDate } })
         .then((orders) => {
