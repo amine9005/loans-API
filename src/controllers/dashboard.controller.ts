@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import ProductModel from "../models/products.model";
 import ordersModel from "../models/orders.model";
+import productsModel from "../models/products.model";
 
 /*
 + * Retrieves the size of the inventory.
@@ -183,8 +184,62 @@ const getSalesData = async (req: Request, res: Response) => {
   }
 };
 
+const getInventoryData = async (req: Request, res: Response) => {
+  const { filter } = req.params;
+
+  try {
+    if (filter === "1W") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - 7
+      );
+      // console.log("date: ", targetDate);
+      // console.log("target day: ", targetDate.getDate());
+      // console.log("target time: ", targetDate.getHours());
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Products found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find Products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find Products " + err.message });
+        });
+    } else if (filter === "1M") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - 1,
+        currentDate.getDate()
+      );
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Products found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find Products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find Products " + err.message });
+        });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Unable to find Products Unknown Filter: ", err });
+  }
+};
+
 export default {
   getInventorySize,
   getOrdersSize,
   getSalesData,
+  getInventoryData,
 };
