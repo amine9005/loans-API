@@ -200,9 +200,9 @@ const getInventoryData = async (req: Request, res: Response) => {
       // console.log("target time: ", targetDate.getHours());
       await productsModel
         .find({ dateCreated: { $gte: targetDate } })
-        .then((orders) => {
+        .then((products) => {
           console.log("Products found");
-          return res.status(200).json({ orders: orders });
+          return res.status(200).json({ products: products });
         })
         .catch((err) => {
           console.log("Unable to find Products " + err.message);
@@ -219,9 +219,43 @@ const getInventoryData = async (req: Request, res: Response) => {
       );
       await productsModel
         .find({ dateCreated: { $gte: targetDate } })
-        .then((orders) => {
+        .then((products) => {
           console.log("Products found");
-          return res.status(200).json({ orders: orders });
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find Products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find Products " + err.message });
+        });
+    } else if (filter === "YTD") {
+      const currentDate = new Date();
+      const targetDate = new Date(currentDate.getFullYear(), 0, 0);
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((products) => {
+          console.log("Products found");
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find products " + err.message });
+        });
+    } else if (filter === "1Y") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear() - 1,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((products) => {
+          console.log("Products found");
+          return res.status(200).json({ products: products });
         })
         .catch((err) => {
           console.log("Unable to find Products " + err.message);
