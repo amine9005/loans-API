@@ -263,6 +263,44 @@ const getInventoryData = async (req: Request, res: Response) => {
             .status(404)
             .json({ error: "Unable to find Products " + err.message });
         });
+    } else if (filter === "3Y") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear() - 3,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((products) => {
+          console.log("products found");
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find products " + err.message });
+        });
+    } else if (filter === "5Y") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear() - 5,
+        currentDate.getMonth(),
+        currentDate.getDate()
+      );
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((products) => {
+          console.log("products found");
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find products " + err.message });
+        });
     }
   } catch (err) {
     return res
