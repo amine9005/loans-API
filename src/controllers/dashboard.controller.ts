@@ -61,7 +61,7 @@ const getSalesData = async (req: Request, res: Response) => {
       // console.log("target day: ", targetDate.getDate());
       // console.log("target time: ", targetDate.getHours());
       await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
+        .find({ dateCreated: { $gte: targetDate }, status: "shipped" })
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
@@ -80,7 +80,7 @@ const getSalesData = async (req: Request, res: Response) => {
         currentDate.getDate()
       );
       await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
+        .find({ dateCreated: { $gte: targetDate }, status: "shipped" })
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
@@ -95,7 +95,7 @@ const getSalesData = async (req: Request, res: Response) => {
       const currentDate = new Date();
       const targetDate = new Date(currentDate.getFullYear(), 0, 0);
       await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
+        .find({ dateCreated: { $gte: targetDate }, status: "shipped" })
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
@@ -114,7 +114,7 @@ const getSalesData = async (req: Request, res: Response) => {
         currentDate.getDate()
       );
       await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
+        .find({ dateCreated: { $gte: targetDate }, status: "shipped" })
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
@@ -133,7 +133,7 @@ const getSalesData = async (req: Request, res: Response) => {
         currentDate.getDate()
       );
       await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
+        .find({ dateCreated: { $gte: targetDate }, status: "shipped" })
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
@@ -152,7 +152,7 @@ const getSalesData = async (req: Request, res: Response) => {
         currentDate.getDate()
       );
       await ordersModel
-        .find({ dateCreated: { $gte: targetDate } })
+        .find({ dateCreated: { $gte: targetDate }, status: "shipped" })
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
@@ -308,7 +308,58 @@ const getInventoryData = async (req: Request, res: Response) => {
       .json({ error: "Unable to find Products Unknown Filter: ", err });
   }
 };
+const getOrdersData = async (req: Request, res: Response) => {
+  const { filter } = req.params;
 
+  try {
+    if (filter === "1W") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth(),
+        currentDate.getDate() - 7
+      );
+      // console.log("date: ", targetDate);
+      // console.log("target day: ", targetDate.getDate());
+      // console.log("target time: ", targetDate.getHours());
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((products) => {
+          console.log("Products found");
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find Products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find Products " + err.message });
+        });
+    } else if (filter === "1M") {
+      const currentDate = new Date();
+      const targetDate = new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - 1,
+        currentDate.getDate()
+      );
+      await productsModel
+        .find({ dateCreated: { $gte: targetDate } })
+        .then((products) => {
+          console.log("Products found");
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find Products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find Products " + err.message });
+        });
+    }
+  } catch (err) {
+    return res
+      .status(500)
+      .json({ error: "Unable to find Products Unknown Filter: ", err });
+  }
+};
 export default {
   getInventorySize,
   getOrdersSize,
