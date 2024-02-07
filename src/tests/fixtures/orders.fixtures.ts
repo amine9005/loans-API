@@ -5,7 +5,7 @@ const orderInput = {
   paymentMethod: "payment",
   // itemsPrice: [300, 150],
   dateCreated: dateCreated,
-  status: "pending",
+  status: "shipped",
   shippingPrice: 50,
   totalPrice: 500,
 };
@@ -16,7 +16,7 @@ const orderUpdate = {
   paymentMethod: "payment2",
   // itemsPrice: [350, 250],
   dateCreated: dateCreated,
-  status: "pending",
+  status: "shipped",
   shippingPrice: 100,
   totalPrice: 750,
 };
