@@ -437,4 +437,5 @@ export default {
   getOrdersSize,
   getSalesData,
   getInventoryData,
+  getOrdersData,
 };
