@@ -601,4 +601,94 @@ describe("Get Inventory Data", () => {
     expect(getOneWeekInventory2.type).toEqual("application/json");
     expect(getOneWeekInventory2.body.products.length).toEqual(1);
   });
+
+  test("should return the 3 years Inventory data as a JSON response with a 200 status code when orders are found", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const getOneWeekProducts = await supertest(app)
+      .get(api + "/inventoryData/3Y")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOneWeekProducts.status).toEqual(200);
+    expect(getOneWeekProducts.type).toEqual("application/json");
+    expect(getOneWeekProducts.body.products).toEqual([]);
+
+    const addProduct = await supertest(app)
+      .post(prodApi + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const getOneWeekInventory2 = await supertest(app)
+      .get(api + "/inventoryData/3Y")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOneWeekInventory2.status).toEqual(200);
+    expect(getOneWeekInventory2.type).toEqual("application/json");
+    expect(getOneWeekInventory2.body.products.length).toEqual(1);
+  });
+
+  test("should return the 5 years Inventory data as a JSON response with a 200 status code when orders are found", async () => {
+    const postUser = await supertest(app)
+      .post(authApi + "/register")
+      .send(usersFixtures.userInput);
+    expect(postUser.status).toEqual(200);
+    const getUser = await supertest(app)
+      .post(authApi + "/login")
+      .send(usersFixtures.userLogin);
+    expect(getUser.status).toEqual(200);
+    expect(getUser.type).toEqual("application/json");
+    expect(getUser.body).toEqual(
+      expect.objectContaining(usersFixtures.accessToken)
+    );
+    const { header } = getUser;
+    const getOneWeekProducts = await supertest(app)
+      .get(api + "/inventoryData/5Y")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOneWeekProducts.status).toEqual(200);
+    expect(getOneWeekProducts.type).toEqual("application/json");
+    expect(getOneWeekProducts.body.products).toEqual([]);
+
+    const addProduct = await supertest(app)
+      .post(prodApi + "/add")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`)
+      .send(productsFixtures.productInput);
+
+    expect(addProduct.status).toEqual(200);
+    expect(addProduct.type).toEqual("application/json");
+    expect(addProduct.body.product).toEqual(
+      expect.objectContaining(productsFixtures.productOutput)
+    );
+
+    const getOneWeekInventory2 = await supertest(app)
+      .get(api + "/inventoryData/5Y")
+      .set("Cookie", [...header["set-cookie"]])
+      .set("Authorization", `Bearer ${getUser.body.accessToken}`);
+
+    expect(getOneWeekInventory2.status).toEqual(200);
+    expect(getOneWeekInventory2.type).toEqual("application/json");
+    expect(getOneWeekInventory2.body.products.length).toEqual(1);
+  });
 });
