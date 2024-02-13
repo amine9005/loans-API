@@ -322,14 +322,14 @@ const getOrdersData = async (req: Request, res: Response) => {
       // console.log("date: ", targetDate);
       // console.log("target day: ", targetDate.getDate());
       // console.log("target time: ", targetDate.getHours());
-      await productsModel
+      await ordersModel
         .find({ dateCreated: { $gte: targetDate } })
-        .then((products) => {
-          console.log("Products found");
-          return res.status(200).json({ products: products });
+        .then((orders) => {
+          console.log("orders found");
+          return res.status(200).json({ orders: orders });
         })
         .catch((err) => {
-          console.log("Unable to find Products " + err.message);
+          console.log("Unable to find orders " + err.message);
           return res
             .status(404)
             .json({ error: "Unable to find Products " + err.message });
@@ -341,17 +341,17 @@ const getOrdersData = async (req: Request, res: Response) => {
         currentDate.getMonth() - 1,
         currentDate.getDate()
       );
-      await productsModel
+      await ordersModel
         .find({ dateCreated: { $gte: targetDate } })
-        .then((products) => {
-          console.log("Products found");
-          return res.status(200).json({ products: products });
+        .then((orders) => {
+          console.log("orders found");
+          return res.status(200).json({ orders: orders });
         })
         .catch((err) => {
-          console.log("Unable to find Products " + err.message);
+          console.log("Unable to find orders " + err.message);
           return res
             .status(404)
-            .json({ error: "Unable to find Products " + err.message });
+            .json({ error: "Unable to find orders " + err.message });
         });
     } else if (filter === "YTD") {
       const currentDate = new Date();
