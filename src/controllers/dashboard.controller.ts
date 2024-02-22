@@ -301,6 +301,19 @@ const getInventoryData = async (req: Request, res: Response) => {
             .status(404)
             .json({ error: "Unable to find products " + err.message });
         });
+    } else if (filter === "ALL") {
+      await productsModel
+        .find()
+        .then((products) => {
+          console.log("products found");
+          return res.status(200).json({ products: products });
+        })
+        .catch((err) => {
+          console.log("Unable to find products " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find products " + err.message });
+        });
     }
   } catch (err) {
     return res
@@ -415,6 +428,19 @@ const getOrdersData = async (req: Request, res: Response) => {
       );
       await ordersModel
         .find({ dateCreated: { $gte: targetDate } })
+        .then((orders) => {
+          console.log("Orders found");
+          return res.status(200).json({ orders: orders });
+        })
+        .catch((err) => {
+          console.log("Unable to find orders " + err.message);
+          return res
+            .status(404)
+            .json({ error: "Unable to find orders " + err.message });
+        });
+    } else if (filter === "ALL") {
+      await ordersModel
+        .find()
         .then((orders) => {
           console.log("Orders found");
           return res.status(200).json({ orders: orders });
